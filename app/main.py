@@ -20,14 +20,27 @@ from datetime import datetime, timezone
 async def lifespan(app: FastAPI):
     print(f"[startup] Dawaa'i AI starting in '{settings.ENVIRONMENT}' mode...")
     
-    # Auto-extract database if dawaai.db does not exist but dawaai.db.zip exists
+    # Auto-extract or download database if dawaai.db does not exist
     db_path = settings.DATABASE_PATH
-    if not os.path.exists(db_path) and os.path.exists(f"{db_path}.zip"):
-        print(f"[startup] Unzipping packaged database {db_path}.zip ...")
-        import zipfile
-        with zipfile.ZipFile(f"{db_path}.zip", "r") as z:
-            z.extractall(".")
-        print(f"[startup] Extracted {db_path} successfully ({os.path.getsize(db_path)/(1024*1024):.2f} MB).")
+    if not os.path.exists(db_path):
+        if os.path.exists(f"{db_path}.zip"):
+            print(f"[startup] Unzipping local packaged database {db_path}.zip ...")
+            import zipfile
+            with zipfile.ZipFile(f"{db_path}.zip", "r") as z:
+                z.extractall(".")
+            print(f"[startup] Extracted {db_path} successfully ({os.path.getsize(db_path)/(1024*1024):.2f} MB).")
+        else:
+            print(f"[startup] Downloading database from GitHub release v1.0.0 ...")
+            try:
+                import urllib.request
+                import zipfile
+                url = "https://github.com/aboabdelkahleq515-creator/dawaai-ai/releases/download/v1.0.0/dawaai.db.zip"
+                urllib.request.urlretrieve(url, f"{db_path}.zip")
+                with zipfile.ZipFile(f"{db_path}.zip", "r") as z:
+                    z.extractall(".")
+                print(f"[startup] Downloaded and extracted {db_path} successfully ({os.path.getsize(db_path)/(1024*1024):.2f} MB).")
+            except Exception as ex:
+                print(f"[startup] Database auto-download note: {ex}")
         
     print(f"[startup] Active database: {settings.DATABASE_PATH}")
     init_db()
