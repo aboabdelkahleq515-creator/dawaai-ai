@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دوائي AI — افهم دواءك بثقة | Dawaa'i AI</title>
+  <meta name="description" content="منصة ذكية موثوقة لمعلومات الأدوية، قراءة النشرات الطبية، وتبسيط المصطلحات باللغتين العربية والإنجليزية استناداً لمراجع هيئات الغذاء والدواء.">
+  
+  <!-- Favicon / Application Icon (Medical Capsule + Cross in Blue-Purple) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230A0F2D'/><path d='M10 16a6 6 0 0 1 12 0v0a6 6 0 0 1-12 0Z' fill='none' stroke='%237C3AED' stroke-width='2.5'/><line x1='10' y1='16' x2='22' y2='16' stroke='%232563EB' stroke-width='2.5'/><circle cx='16' cy='11' r='1.5' fill='%23FFFFFF'/></svg>">
+
+  <!-- Google Fonts: Cairo (Arabic) & Inter (English) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tesseract.js for high-speed client OCR fallback -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+  <!-- Application Stylesheet -->
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+  <!-- ==================== AMBIENT MEDICINE BACKGROUND SHAPES ==================== -->
+  <div class="ambient-medicine-backdrop" aria-hidden="true">
+    <!-- Aurora Atmosphere Glow Orbs -->
+    <div class="ambient-glow-orb ambient-glow-blue"></div>
+    <div class="ambient-glow-orb ambient-glow-purple"></div>
+
+    <!-- Floating Capsule 1 (Blue & Purple) -->
+    <svg class="floating-med-shape floating-capsule-1" viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cap1-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#3B82F6" />
+          <stop offset="100%" stop-color="#1D4ED8" />
+        </linearGradient>
+        <linearGradient id="cap1-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#A855F7" />
+          <stop offset="100%" stop-color="#6D28D9" />
+        </linearGradient>
+      </defs>
+      <!-- Top Half (Purple) -->
+      <path d="M10 90V50A40 40 0 0 1 90 50V90H10Z" fill="url(#cap1-purple)"/>
+      <!-- Bottom Half (Blue) -->
+      <path d="M10 90H90V150A40 40 0 0 1 10 150V90Z" fill="url(#cap1-blue)"/>
+      <!-- Gloss Specular Highlight -->
+      <path d="M25 40C25 40 28 25 50 25C72 25 75 40 75 40" stroke="white" stroke-width="6" stroke-linecap="round" opacity="0.4"/>
+      <rect x="10" y="87" width="80" height="6" fill="#0A0F2D" opacity="0.15"/>
+    </svg>
+
+    <!-- Floating Capsule 2 (Reverse Floating) -->
+    <svg class="floating-med-shape floating-capsule-2" viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Top Half (Blue) -->
+      <path d="M10 90V50A40 40 0 0 1 90 50V90H10Z" fill="#2563EB"/>
+      <!-- Bottom Half (Purple) -->
+      <path d="M10 90H90V150A40 40 0 0 1 10 150V90Z" fill="#7C3AED"/>
+      <line x1="10" y1="90" x2="90" y2="90" stroke="white" stroke-width="4" opacity="0.6"/>
+    </svg>
+
+    <!-- Floating Round Tablet 1 (Circular with division line) -->
+    <svg class="floating-med-shape floating-tablet-1" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="44" fill="#6366F1" opacity="0.85"/>
+      <circle cx="50" cy="50" r="44" stroke="#4338CA" stroke-width="6"/>
+      <line x1="18" y1="50" x2="82" y2="50" stroke="#EEF2FF" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="36" cy="36" r="6" fill="white" opacity="0.35"/>
+    </svg>
+
+    <!-- Floating Round Tablet 2 -->
+    <svg class="floating-med-shape floating-tablet-2" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="42" fill="#8B5CF6" opacity="0.75"/>
+      <circle cx="50" cy="50" r="42" stroke="#6D28D9" stroke-width="5"/>
+      <line x1="50" y1="18" x2="50" y2="82" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+
+    <!-- Floating Molecular Hexagon Structure 1 -->
+    <svg class="floating-med-shape floating-molecule-1" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="60,15 100,38 100,82 60,105 20,82 20,38" stroke="#3B82F6" stroke-width="4" fill="rgba(59, 130, 246, 0.08)"/>
+      <circle cx="60" cy="15" r="7" fill="#7C3AED"/>
+      <circle cx="100" cy="38" r="7" fill="#2563EB"/>
+      <circle cx="100" cy="82" r="7" fill="#7C3AED"/>
+      <circle cx="60" cy="105" r="7" fill="#2563EB"/>
+      <circle cx="20" cy="82" r="7" fill="#7C3AED"/>
+      <circle cx="20" cy="38" r="7" fill="#2563EB"/>
+      <circle cx="60" cy="60" r="16" stroke="#8B5CF6" stroke-width="3" stroke-dasharray="4 4"/>
+    </svg>
+
+    <!-- Floating Molecular Hexagon Structure 2 -->
+    <svg class="floating-med-shape floating-molecule-2" viewBox="0 0 140 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="45,15 80,35 80,75 45,95 10,75 10,35" stroke="#7C3AED" stroke-width="3.5" fill="none"/>
+      <polygon points="80,35 115,15 135,45 115,75 80,75" stroke="#2563EB" stroke-width="3.5" fill="none"/>
+      <circle cx="45" cy="15" r="5" fill="#3B82F6"/>
+      <circle cx="115" cy="15" r="5" fill="#A855F7"/>
+      <circle cx="45" cy="95" r="5" fill="#6366F1"/>
+    </svg>
+
+    <!-- Medical Plus Crosses -->
+    <svg class="floating-med-shape floating-cross-1" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22 6H38V22H54V38H38V54H22V38H6V22H22V6Z" fill="#2563EB"/>
+    </svg>
+    <svg class="floating-med-shape floating-cross-2" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22 6H38V22H54V38H38V54H22V38H6V22H22V6Z" fill="#7C3AED"/>
+    </svg>
+  </div>
+
+  <!-- ==================== 1. RESPONSIVE NAVIGATION ==================== -->
+  <nav class="navbar" role="navigation" aria-label="Main Navigation">
+    <div class="container nav-container">
+      <a href="javascript:void(0)" onclick="navigateTo('home')" class="brand-logo" aria-label="Dawaa'i AI Homepage">
+        <div class="brand-icon-box">
+          <!-- Subtle medical capsule + digital pulse icon -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/>
+            <path d="m8.5 8.5 7 7"/>
+          </svg>
+        </div>
+        <div>
+          <span data-i18n="brand_name">دوائي</span>
+          <span style="font-size: 0.8rem; font-weight: 500; color: var(--color-primary); display: block; line-height: 1;">AI</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Items -->
+      <ul class="nav-links">
+        <li class="nav-item"><a href="javascript:void(0)" onclick="navigateTo('home')" data-tab="home" data-i18n="nav_home">الرئيسية</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" onclick="navigateTo('search')" data-tab="search" data-i18n="nav_search">بحث الأدوية</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" onclick="navigateTo('scan')" data-tab="scan" data-i18n="nav_scan">مسح الدواء</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" onclick="navigateTo('interactions')" data-tab="interactions" data-i18n="nav_interactions">التداخلات الدوائية</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" onclick="navigateTo('leaflet')" data-tab="leaflet" data-i18n="nav_leaflet">قراءة النشرة</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" onclick="navigateTo('assistant')" data-tab="assistant" data-i18n="nav_assistant">المساعد الذكي</a></li>
+        <li class="nav-item" id="nav-item-history" style="display: none;"><a href="javascript:void(0)" onclick="navigateTo('history')" data-tab="history" data-i18n="nav_history">📜 سجلي ونشاطي</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" onclick="navigateTo('about')" data-tab="about" data-i18n="nav_about">عن المنصة</a></li>
+      </ul>
+
+      <!-- Nav Actions (Language & Auth) -->
+      <div class="nav-actions">
+        <!-- Prominent Segmented Bilingual Control -->
+        <div class="lang-segmented-control" role="group" aria-label="Language selection">
+          <button type="button" class="lang-segmented-btn active" id="btn-lang-ar" onclick="setLanguage('ar')">
+            العربية 🇸🇦
+          </button>
+          <button type="button" class="lang-segmented-btn" id="btn-lang-en" onclick="setLanguage('en')">
+            English 🇬🇧
+          </button>
+        </div>
+
+        <!-- User Authentication State -->
+        <div id="nav-auth-container">
+          <div style="display: flex; gap: 0.4rem; align-items: center;">
+            <button class="btn btn-primary btn-sm" onclick="handleDirectLogin()" data-i18n="nav_signin" title="تسجيل الدخول المباشر بحساب تجريبي نشط">
+              <i data-lucide="log-in" style="width: 14px; height: 14px;"></i>
+              <span>تسجيل الدخول</span>
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="navigateTo('login')" title="خيارات تسجيل الدخول الأخرى" style="padding: 0.35rem 0.55rem;">
+              <i data-lucide="settings" style="width: 14px; height: 14px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Open Navigation Menu">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer / Dropdown -->
+  <div id="mobile-menu-drawer" style="display: none; background: var(--color-white); border-bottom: 1px solid var(--color-border); padding: 1rem 1.25rem;">
+    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">
+      <li><a href="javascript:void(0)" onclick="navigateTo('home'); toggleMobileMenu();" data-i18n="nav_home">الرئيسية</a></li>
+      <li><a href="javascript:void(0)" onclick="navigateTo('search'); toggleMobileMenu();" data-i18n="nav_search">بحث الأدوية</a></li>
+      <li><a href="javascript:void(0)" onclick="navigateTo('scan'); toggleMobileMenu();" data-i18n="nav_scan">مسح الدواء</a></li>
+      <li><a href="javascript:void(0)" onclick="navigateTo('interactions'); toggleMobileMenu();" data-i18n="nav_interactions">التداخلات الدوائية</a></li>
+      <li><a href="javascript:void(0)" onclick="navigateTo('leaflet'); toggleMobileMenu();" data-i18n="nav_leaflet">قراءة النشرة</a></li>
+      <li><a href="javascript:void(0)" onclick="navigateTo('assistant'); toggleMobileMenu();" data-i18n="nav_assistant">المساعد الذكي</a></li>
+      <li id="mobile-item-history" style="display: none;"><a href="javascript:void(0)" onclick="navigateTo('history'); toggleMobileMenu();" data-i18n="nav_history">📜 سجلي ونشاطي</a></li>
+      <li><a href="javascript:void(0)" onclick="navigateTo('about'); toggleMobileMenu();" data-i18n="nav_about">عن المنصة</a></li>
+      <li style="margin-top: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--color-border); display: flex; justify-content: center;">
+        <div class="lang-segmented-control">
+          <button type="button" class="lang-segmented-btn active" id="btn-mobile-lang-ar" onclick="setLanguage('ar'); toggleMobileMenu();">العربية 🇸🇦</button>
+          <button type="button" class="lang-segmented-btn" id="btn-mobile-lang-en" onclick="setLanguage('en'); toggleMobileMenu();">English 🇬🇧</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main Content Wrapper -->
+  <main id="main-content" style="flex-grow: 1;">
+
+    <!-- ==================== VIEW 1: HOMEPAGE ==================== -->
+    <div id="panel-home" class="view-panel">
+
+      <!-- 2. Hero Section -->
+      <section class="hero-section">
+        <div class="container hero-grid">
+          <div class="hero-content">
+            <!-- Dynamic Real-time Clinical AI Ticker -->
+            <div class="live-ticker-container">
+              <div class="live-ticker-badge">
+                <span class="live-radar-dot"></span>
+                <span id="live-ticker-text" class="ticker-text-wrapper" data-i18n="ticker_ai_active">🟢 الذكاء الاصطناعي السريري نشط ومحدث لحظياً</span>
+              </div>
+            </div>
+            <h1 data-i18n="hero_headline">افهم دواءك بثقة.</h1>
+            <p data-i18n="hero_description">
+              اكتشف معلومات الأدوية، واقرأ النشرات الطبية، وافهم المصطلحات المعقدة من خلال تجربة ذكية باللغة العربية والإنجليزية.
+            </p>
+            <div class="hero-actions">
+              <button class="btn btn-primary btn-lg" onclick="navigateTo('search')">
+                <i data-lucide="search" style="width: 20px; height: 20px;"></i>
+                <span data-i18n="hero_btn_search">ابحث عن دواء</span>
+              </button>
+              <button class="btn btn-secondary btn-lg" onclick="navigateTo('leaflet')">
+                <i data-lucide="file-text" style="width: 20px; height: 20px;"></i>
+                <span data-i18n="hero_btn_leaflet">جرّب قراءة النشرة</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="hero-card-preview">
+              <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.85rem; margin-bottom: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--color-success);"></span>
+                  <span style="font-weight: 700; font-size: 0.95rem;">Panadol Advance 500mg</span>
+                </div>
+                <span class="review-badge">SFDA / EMA</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem;">
+                <div style="background: var(--color-bg-light); padding: 0.65rem; border-radius: var(--radius-sm);">
+                  <strong style="color: var(--color-primary);" data-i18n="hero_sample_active_lbl">المادة الفعالة:</strong> <span data-i18n="hero_sample_active_val">باراسيتامول (Paracetamol)</span>
+                </div>
+                <div style="background: var(--color-bg-light); padding: 0.65rem; border-radius: var(--radius-sm);">
+                  <strong style="color: var(--color-primary);" data-i18n="hero_sample_dose_lbl">الجرعة المعتادة:</strong> <span data-i18n="hero_sample_dose_val">قرص إلى قرصين كل 4-6 ساعات (بحد أقصى 8 أقراص يومياً).</span>
+                </div>
+                <div style="background: #FFF5F5; padding: 0.65rem; border-radius: var(--radius-sm); border-inline-start: 3px solid var(--color-error);">
+                  <strong style="color: var(--color-error);" data-i18n="hero_sample_warn_lbl">تنبيه أمان:</strong> <span data-i18n="hero_sample_warn_val">لا يكرر مع أدوية أخرى تحتوي على الباراسيتامول لتفادي سمية الكبد.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Quick Access Feature Cards -->
+      <section style="padding: 4rem 0 2rem;">
+        <div class="container">
+          <div class="section-header">
+            <h2 data-i18n="quick_cards_title">الخدمات الطبية الرقمية المتكاملة</h2>
+            <p data-i18n="quick_cards_subtitle">أدوات ذكية متقدمة صُممت لتسهيل فهم الأدوية وحماية صحتك وسلامة عائلتك.</p>
+          </div>
+
+          <div class="quick-cards-grid">
+            <!-- Card 1: Medicine Search -->
+            <div class="quick-card" onclick="navigateTo('search')">
+              <div>
+                <div class="quick-card-icon"><i data-lucide="search"></i></div>
+                <h3 data-i18n="card_search_title">بحث الأدوية الموثق</h3>
+                <p data-i18n="card_search_desc">ابحث في سجل الأدوية المعتمدة بالاسم التجاري أو العلمي، واطلع على الجرعات وموانع الاستعمال.</p>
+              </div>
+              <div class="quick-card-footer">
+                <span data-i18n="card_search_action">ابدأ البحث الآن</span>
+                <i data-lucide="chevron-right" class="icon-arrow-end"></i>
+              </div>
+            </div>
+
+            <!-- Card 2: Medicine Image Scanner -->
+            <div class="quick-card" onclick="navigateTo('scan')">
+              <div>
+                <div class="quick-card-icon"><i data-lucide="camera"></i></div>
+                <h3 data-i18n="card_scan_title">مسح علبة الدواء (OCR)</h3>
+                <p data-i18n="card_scan_desc">التقط صورة لعلبة أو شريط الدواء لاستخراج المادة الفعالة والتركيز فوراً عبر الذكاء الاصطناعي.</p>
+              </div>
+              <div class="quick-card-footer">
+                <span data-i18n="card_scan_action">مسح العلبة</span>
+                <i data-lucide="chevron-right" class="icon-arrow-end"></i>
+              </div>
+            </div>
+
+            <!-- Card 3: Leaflet Reader -->
+            <div class="quick-card" onclick="navigateTo('leaflet')">
+              <div>
+                <div class="quick-card-icon"><i data-lucide="file-text"></i></div>
+                <h3 data-i18n="card_leaflet_title">قارئ النشرة الطبية</h3>
+                <p data-i18n="card_leaflet_desc">حوّل النشرات الطبية الطويلة والمعقدة إلى نقاط واضحة مع تبسيط المصطلحات التخصصية.</p>
+              </div>
+              <div class="quick-card-footer">
+                <span data-i18n="card_leaflet_action">قراءة النشرة</span>
+                <i data-lucide="chevron-right" class="icon-arrow-end"></i>
+              </div>
+            </div>
+
+            <!-- Card 4: AI Assistant -->
+            <div class="quick-card" onclick="navigateTo('assistant')">
+              <div>
+                <div class="quick-card-icon"><i data-lucide="sparkles"></i></div>
+                <h3 data-i18n="card_assistant_title">المساعد الطبي الذكي</h3>
+                <p data-i18n="card_assistant_desc">اطرح أسئلتك الدوائية وتلقّ إجابات مدعومة بالمراجع الرسمية وإرشادات الأمان المعتمدة.</p>
+              </div>
+              <div class="quick-card-footer">
+                <span data-i18n="card_assistant_action">تحدث مع المساعد</span>
+                <i data-lucide="chevron-right" class="icon-arrow-end"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- DYNAMIC FEATURE: Interactive Drug Interaction & Synergy Quick-Checker -->
+          <div class="interaction-checker-card">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+              <div>
+                <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--color-secondary-light); color: var(--color-primary-purple); padding: 0.35rem 0.85rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem;">
+                  <i data-lucide="zap" style="width: 15px; height: 15px;"></i>
+                  <span data-i18n="checker_badge">أداة تفاعلية سريرية فورية</span>
+                </div>
+                <h3 style="font-size: 1.5rem; color: var(--color-primary-dark); margin-bottom: 0.35rem;" data-i18n="checker_title">
+                  فاحص التفاعلات الدوائية والتآزر الحيوي
+                </h3>
+                <p style="font-size: 0.95rem; color: var(--color-text-secondary);" data-i18n="checker_subtitle">
+                  اختر أو ادمج بين دوائين لفحص التوافق الحيوي ومخاطر التداخل فوراً وفق المعايير السريرية.
+                </p>
+              </div>
+            </div>
+
+            <!-- Quick Combo Buttons -->
+            <div>
+              <span style="font-size: 0.85rem; font-weight: 700; color: var(--color-primary-dark);" data-i18n="checker_quick_combos">
+                تركيبات شائعة للفحص السريع:
+              </span>
+              <div class="combos-chips-wrapper">
+                <button type="button" class="combo-pill" onclick="runQuickComboCheck('panadol_brufen')" data-i18n="combo_panadol_brufen">💊 بنادول + بروفين</button>
+                <button type="button" class="combo-pill" onclick="runQuickComboCheck('aspirin_warfarin')" data-i18n="combo_aspirin_warfarin">⚠️ أسبرين + وارفارين</button>
+                <button type="button" class="combo-pill" onclick="runQuickComboCheck('augmentin_probiotic')" data-i18n="combo_augmentin_probiotic">💡 أوجمنتين + بروبيوتيك</button>
+                <button type="button" class="combo-pill" onclick="runQuickComboCheck('omeprazole_iron')" data-i18n="combo_omeprazole_iron">🔍 أوميبرازول + حديد</button>
+              </div>
+            </div>
+
+            <!-- Interactive Dual Selectors -->
+            <div style="display: grid; grid-template-columns: 1fr auto 1fr auto; gap: 1rem; align-items: flex-end; margin-top: 1rem;">
+              <div>
+                <label class="form-label" data-i18n="checker_med1">الدواء الأول</label>
+                <select id="interaction-med-1" class="form-control" onchange="runCustomInteractionCheck()">
+                  <option value="panadol" data-i18n="opt_panadol">بنادول (باراسيتامول 500 ملغ)</option>
+                  <option value="brufen" data-i18n="opt_brufen">بروفين (إيبوبروفين 400 ملغ)</option>
+                  <option value="aspirin" data-i18n="opt_aspirin">أسبرين (حمض أسيتيل ساليسيليك 100 ملغ)</option>
+                  <option value="warfarin" data-i18n="opt_warfarin">وارفارين (مضاد تخثر 5 ملغ)</option>
+                  <option value="augmentin" data-i18n="opt_augmentin">أوجمنتين (أموكسيسيلين + كلافولانات 1 غرام)</option>
+                  <option value="probiotic" data-i18n="opt_probiotic">بروبيوتيك (بكتيريا نافعة 5 بليون)</option>
+                  <option value="omeprazole" data-i18n="opt_omeprazole">أوميبرازول (مثبط مضخة البروتون 20 ملغ)</option>
+                  <option value="iron" data-i18n="opt_iron">مكملات الحديد (كبريتات الحديدوز 190 ملغ)</option>
+                </select>
+              </div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--color-primary-purple); padding-bottom: 0.65rem;">+</div>
+              <div>
+                <label class="form-label" data-i18n="checker_med2">الدواء الثاني</label>
+                <select id="interaction-med-2" class="form-control" onchange="runCustomInteractionCheck()">
+                  <option value="brufen" data-i18n="opt_brufen">بروفين (إيبوبروفين 400 ملغ)</option>
+                  <option value="panadol" data-i18n="opt_panadol">بنادول (باراسيتامول 500 ملغ)</option>
+                  <option value="aspirin" data-i18n="opt_aspirin">أسبرين (حمض أسيتيل ساليسيليك 100 ملغ)</option>
+                  <option value="warfarin" data-i18n="opt_warfarin">وارفارين (مضاد تخثر 5 ملغ)</option>
+                  <option value="augmentin" data-i18n="opt_augmentin">أوجمنتين (أموكسيسيلين + كلافولانات 1 غرام)</option>
+                  <option value="probiotic" data-i18n="opt_probiotic">بروبيوتيك (بكتيريا نافعة 5 بليون)</option>
+                  <option value="omeprazole" data-i18n="opt_omeprazole">أوميبرازول (مثبط مضخة البروتون 20 ملغ)</option>
+                  <option value="iron" data-i18n="opt_iron">مكملات الحديد (كبريتات الحديدوز 190 ملغ)</option>
+                </select>
+              </div>
+              <div>
+                <button type="button" class="btn btn-primary" style="height: 44px; white-space: nowrap;" onclick="runCustomInteractionCheck()" data-i18n="checker_btn_check">
+                  <i data-lucide="activity"></i>
+                  <span>فحص التداخل</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Dynamic Interactive Results Output -->
+            <div id="interaction-result-output" style="margin-top: 1.25rem;">
+              <div class="interaction-result-card interaction-danger-safe">
+                <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; margin-bottom: 0.25rem;">
+                  <i data-lucide="check-circle-2"></i>
+                  <span data-i18n="checker_default_res_title">بنادول + بروفين: مزيج مسكن معتمد وآمن بحذر</span>
+                </div>
+                <p style="font-size: 0.9rem; margin: 0; line-height: 1.6;" data-i18n="checker_default_res_desc">
+                  يعمل الدواءان عبر مسارات ألم مختلفة (باراسيتامول مركزياً + إيبوبروفين مضاد للالتهاب طرفياً). يمكن تناولهما بالتناوب عند الألم الشديد مع عدم تجاوز الجرعة القصوى لكل منهما.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 4. How It Works -->
+      <section style="padding: 2rem 0; background: rgba(124, 58, 237, 0.03);">
+        <div class="container">
+          <div class="section-header">
+            <h2 data-i18n="how_it_works_title">كيف تعمل منصة دوائي؟</h2>
+            <p data-i18n="how_it_works_subtitle">ثلاث خطوات بسيطة للحصول على المعلومة الدوائية الموثوقة بكل وضوح.</p>
+          </div>
+
+          <div class="steps-grid">
+            <div class="step-card step-interactive-card" onclick="openStepWalkthrough(1)" tabindex="0" role="button" aria-label="Step 1 Walkthrough">
+              <div class="step-badge">1</div>
+              <div class="step-icon-glow"><i data-lucide="search"></i></div>
+              <h3 data-i18n="step_1_title" style="margin-bottom: 0.5rem;">1. ابحث أو ارفع النشرة</h3>
+              <p data-i18n="step_1_desc">أدخل اسم الدواء بالعربية أو الإنجليزية، أو صوّر علبة الدواء أو الصق نص النشرة الداخلية.</p>
+              <div class="card-click-pill">
+                <i data-lucide="book-open" style="width: 14px; height: 14px;"></i>
+                <span data-i18n="step_interactive_pill">اضغط لقراءة الدليل والخطوات بالتفصيل 📖</span>
+              </div>
+            </div>
+            <div class="step-card step-interactive-card" onclick="openStepWalkthrough(2)" tabindex="0" role="button" aria-label="Step 2 Walkthrough">
+              <div class="step-badge">2</div>
+              <div class="step-icon-glow"><i data-lucide="check-check"></i></div>
+              <h3 data-i18n="step_2_title" style="margin-bottom: 0.5rem;">2. استكشف البيانات المعتمدة</h3>
+              <p data-i18n="step_2_desc">نظامنا يسترجع المعلومات الرسمية المصرحة من الهيئات الدوائية المعتمدة (SFDA, FDA, EMA).</p>
+              <div class="card-click-pill">
+                <i data-lucide="book-open" style="width: 14px; height: 14px;"></i>
+                <span data-i18n="step_interactive_pill">اضغط لقراءة الدليل والخطوات بالتفصيل 📖</span>
+              </div>
+            </div>
+            <div class="step-card step-interactive-card" onclick="openStepWalkthrough(3)" tabindex="0" role="button" aria-label="Step 3 Walkthrough">
+              <div class="step-badge">3</div>
+              <div class="step-icon-glow"><i data-lucide="sparkles"></i></div>
+              <h3 data-i18n="step_3_title" style="margin-bottom: 0.5rem;">3. افهم الشرح المبسط</h3>
+              <p data-i18n="step_3_desc">احصل على ملخص بلغة بسيطة ومفهومة يوضح الجرعة، موانع الاستعمال، والاحتياطات الحيوية.</p>
+              <div class="card-click-pill">
+                <i data-lucide="book-open" style="width: 14px; height: 14px;"></i>
+                <span data-i18n="step_interactive_pill">اضغط لقراءة الدليل والخطوات بالتفصيل 📖</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Key Platform Benefits -->
+      <section style="padding: 3rem 0;">
+        <div class="container">
+          <div class="section-header">
+            <h2 data-i18n="benefits_title">لماذا يثق المرضى بمنصة دوائي؟</h2>
+            <p data-i18n="benefits_subtitle" style="color: var(--color-text-secondary); margin-top: 0.35rem;">اضغط على أي ميزة للاطلاع على بروتوكول التحقق السريري ومعايير الأمان المتبعة.</p>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+            <div class="benefit-card benefit-interactive-card" onclick="openBenefitWalkthrough(1)" tabindex="0" role="button" style="background: var(--color-white); padding: 1.75rem; border-radius: var(--radius-lg); border: 1px solid var(--color-border);">
+              <i data-lucide="check-circle-2" style="color: var(--color-success); width: 34px; height: 34px; margin-bottom: 0.75rem;"></i>
+              <h3 data-i18n="benefit_1_title" style="font-size: 1.15rem; margin-bottom: 0.4rem;">مصادر رسمية موثقة</h3>
+              <p data-i18n="benefit_1_desc">لا نبتكر معلومات طبية من فراغ؛ كل تفصيل مرتبط بالنشرات الرسمية لهيئات الغذاء والدواء.</p>
+              <div class="card-click-pill">
+                <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
+                <span data-i18n="benefit_interactive_pill">معايير الاعتماد السريري 🔍</span>
+              </div>
+            </div>
+            <div class="benefit-card benefit-interactive-card" onclick="openBenefitWalkthrough(2)" tabindex="0" role="button" style="background: var(--color-white); padding: 1.75rem; border-radius: var(--radius-lg); border: 1px solid var(--color-border);">
+              <i data-lucide="cpu" style="color: var(--color-primary-purple); width: 34px; height: 34px; margin-bottom: 0.75rem;"></i>
+              <h3 data-i18n="benefit_2_title" style="font-size: 1.15rem; margin-bottom: 0.4rem;">ذكاء اصطناعي منضبط ومقيد</h3>
+              <p data-i18n="benefit_2_desc">نماذجنا الطبية مصممة لتقديم شروحات لغوية آمنة ومحددة دون تخمين أو تشخيص طبي عشوائي.</p>
+              <div class="card-click-pill">
+                <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
+                <span data-i18n="benefit_interactive_pill">ضوابط الذكاء المقيد 🔍</span>
+              </div>
+            </div>
+            <div class="benefit-card benefit-interactive-card" onclick="openBenefitWalkthrough(3)" tabindex="0" role="button" style="background: var(--color-white); padding: 1.75rem; border-radius: var(--radius-lg); border: 1px solid var(--color-border);">
+              <i data-lucide="lock" style="color: var(--color-primary); width: 34px; height: 34px; margin-bottom: 0.75rem;"></i>
+              <h3 data-i18n="benefit_3_title" style="font-size: 1.15rem; margin-bottom: 0.4rem;">حماية تامة للخصوصية</h3>
+              <p data-i18n="benefit_3_desc">لا نجمع أو نشارك سجلاتك الصحية الخاصة، وبيانات استخدامك مشفرة ومحمية بالكامل.</p>
+              <div class="card-click-pill">
+                <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
+                <span data-i18n="benefit_interactive_pill">سياسة التشفير والخصوصية 🔍</span>
+              </div>
+            </div>
+            <div class="benefit-card benefit-interactive-card" onclick="openBenefitWalkthrough(4)" tabindex="0" role="button" style="background: var(--color-white); padding: 1.75rem; border-radius: var(--radius-lg); border: 1px solid var(--color-border);">
+              <i data-lucide="languages" style="color: var(--color-secondary-teal); width: 34px; height: 34px; margin-bottom: 0.75rem;"></i>
+              <h3 data-i18n="benefit_4_title" style="font-size: 1.15rem; margin-bottom: 0.4rem;">تجربة عربية أصيلة</h3>
+              <p data-i18n="benefit_4_desc">تم تصميم الواجهة والمصطلحات من الصفر لتدعم اللغة العربية بسلاسة تامة وتناسق طباعي.</p>
+              <div class="card-click-pill">
+                <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
+                <span data-i18n="benefit_interactive_pill">معايير التعريب الطبي 🔍</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Trusted Information Sources -->
+      <section style="padding: 2.5rem 0; background: var(--color-white); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+        <div class="container" style="text-align: center;">
+          <h3 data-i18n="trusted_sources_title" style="margin-bottom: 0.5rem;">مراجع وهيئات الاعتماد المعتمدة لدينا</h3>
+          <p data-i18n="trusted_sources_desc" style="max-width: 650px; margin: 0 auto 1.75rem; font-size: 0.95rem;">
+            نعتمد على قواعد بيانات النشرات الدوائية الرسمية لهيئات الرقابة الصحية المعتمدة:
+          </p>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 2rem; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--color-primary-dark);">
+              <i data-lucide="badge-check" style="color: var(--color-primary);"></i>
+              <span data-i18n="source_sfda">الهيئة العامة للغذاء والدواء (SFDA)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--color-primary-dark);">
+              <i data-lucide="badge-check" style="color: var(--color-primary);"></i>
+              <span data-i18n="source_fda">إدارة الغذاء والدواء الأمريكية (US FDA)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--color-primary-dark);">
+              <i data-lucide="badge-check" style="color: var(--color-primary);"></i>
+              <span data-i18n="source_ema">وكالة الأدوية الأوروبية (EMA)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--color-primary-dark);">
+              <i data-lucide="badge-check" style="color: var(--color-primary);"></i>
+              <span data-i18n="source_who">منظمة الصحة العالمية (WHO)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Real Usage Statistics (Database-Backed) -->
+      <section class="statistics-section" aria-label="Usage Statistics">
+        <div class="container">
+          <div class="section-header">
+            <h2 data-i18n="stats_title">إحصائيات المنصة الحقيقية</h2>
+            <p data-i18n="stats_subtitle">أرقام فعلية ومباشرة محسوبة بدقة من قاعدة البيانات الحية بدون أي أرقام مصطنعة.</p>
+          </div>
+
+          <!-- Dynamic 5 Stat Cards Container -->
+          <div id="stats-cards-container" class="stats-grid">
+            <!-- Populated dynamically via loadStatistics() -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Published User Reviews (Authentic Feedback) -->
+      <section class="reviews-section" aria-label="Customer Reviews">
+        <div class="container">
+          <div class="section-header">
+            <h2 data-i18n="reviews_title">آراء وتقييمات المستخدمين الحقيقية</h2>
+            <p data-i18n="reviews_subtitle">تجارب حقيقية يشاركها مستخدمو المنصة بعد تجربتهم العملية.</p>
+          </div>
+
+          <!-- Rating Overview Breakdown Card -->
+          <div id="reviews-summary-wrapper">
+            <!-- Populated dynamically via loadPublicReviews() -->
+          </div>
+
+          <!-- Star Filter Buttons -->
+          <div id="reviews-filters-chips" class="review-filters">
+            <!-- Populated dynamically -->
+          </div>
+
+          <!-- Real Reviews Grid -->
+          <div id="public-reviews-list" class="reviews-grid">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Dynamic Evaluation Graphics & Sentiment Visual Hub -->
+      <section class="container" style="margin-bottom: 2.5rem;">
+        <div class="dynamic-eval-section">
+          <div style="text-align: center; max-width: 650px; margin: 0 auto 2rem;">
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(2, 132, 199, 0.1); color: var(--color-primary); padding: 0.35rem 0.85rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 700; margin-bottom: 0.75rem;">
+              <i data-lucide="activity" style="width: 16px; height: 16px;"></i>
+              <span data-i18n="eval_badge">مؤشر نبض وتفاعل المستخدمين الحي</span>
+            </div>
+            <h3 style="font-size: 1.75rem; color: var(--color-primary-dark); margin-bottom: 0.5rem;" data-i18n="eval_title">
+              رسومات بيانية حية تعبر عن تقييمات المرضى
+            </h3>
+            <p style="font-size: 0.95rem; color: var(--color-text-secondary);" data-i18n="eval_subtitle">
+              تتحدث الرسومات التعبيرية ونسبة الرضا لحظياً ومباشرة مع كل تقييم جديد يسجله المرضى.
+            </p>
+          </div>
+
+          <div class="eval-hub-grid">
+            <!-- Left Side: Circular SVG Satisfaction Gauge -->
+            <div class="dynamic-gauge-wrapper">
+              <div class="circle-gauge-container">
+                <svg width="140" height="140" viewBox="0 0 140 140" style="transform: rotate(-90deg);">
+                  <circle cx="70" cy="70" r="58" stroke="#E2E8F0" stroke-width="12" fill="none" />
+                  <circle id="dynamic-gauge-circle" cx="70" cy="70" r="58" stroke="url(#gauge-grad)" stroke-width="12" stroke-linecap="round" fill="none" stroke-dasharray="364.4" stroke-dashoffset="60" style="transition: stroke-dashoffset 1s ease;" />
+                  <defs>
+                    <linearGradient id="gauge-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#2563EB" />
+                      <stop offset="100%" stop-color="#7C3AED" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="circle-gauge-text">
+                  <div id="dynamic-satisfaction-percent" class="circle-gauge-percent">92%</div>
+                  <div class="circle-gauge-label" data-i18n="eval_satisfaction_rate">نسبة الرضا</div>
+                </div>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="width: 12px; height: 12px; border-radius: 50%; background: var(--color-success); display: inline-block;"></span>
+                  <span style="font-weight: 700; color: var(--color-primary-dark);" data-i18n="eval_trust_status">مستوى ثقة استثنائي</span>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--color-text-secondary); max-width: 220px;" data-i18n="eval_trust_caption">
+                  محسوبة من كافة مراجعات المرضى الحقيقية الموثقة في قاعدة البيانات.
+                </p>
+              </div>
+            </div>
+
+            <!-- Right Side: Interactive Sentiment Character Avatars -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-weight: 700; font-size: 0.95rem; color: var(--color-primary-dark);" data-i18n="eval_sentiment_breakdown">
+                  توزيع مشاعر وتقييمات المراجعين (تفاعلي):
+                </span>
+                <span id="eval-total-raters" style="font-size: 0.85rem; color: var(--color-primary); font-weight: 700;"></span>
+              </div>
+
+              <div class="eval-sentiment-avatars" id="eval-sentiment-container">
+                <!-- 5 Interactive Emotion Cards -->
+                <div class="sentiment-avatar-card" onclick="applyReviewRatingFilter(5); highlightSentiment(5);" id="sentiment-card-5" title="5 نجوم">
+                  <div class="sentiment-icon">😍</div>
+                  <div class="sentiment-count" id="sent-count-5">0</div>
+                  <div class="sentiment-label" data-i18n="rating_5">ممتازة</div>
+                </div>
+                <div class="sentiment-avatar-card" onclick="applyReviewRatingFilter(4); highlightSentiment(4);" id="sentiment-card-4" title="4 نجوم">
+                  <div class="sentiment-icon">😊</div>
+                  <div class="sentiment-count" id="sent-count-4">0</div>
+                  <div class="sentiment-label" data-i18n="rating_4">جيدة جدًا</div>
+                </div>
+                <div class="sentiment-avatar-card" onclick="applyReviewRatingFilter(3); highlightSentiment(3);" id="sentiment-card-3" title="3 نجوم">
+                  <div class="sentiment-icon">😐</div>
+                  <div class="sentiment-count" id="sent-count-3">0</div>
+                  <div class="sentiment-label" data-i18n="rating_3">مقبولة</div>
+                </div>
+                <div class="sentiment-avatar-card" onclick="applyReviewRatingFilter(2); highlightSentiment(2);" id="sentiment-card-2" title="نجمتان">
+                  <div class="sentiment-icon">🙁</div>
+                  <div class="sentiment-count" id="sent-count-2">0</div>
+                  <div class="sentiment-label" data-i18n="rating_2">سيئة</div>
+                </div>
+                <div class="sentiment-avatar-card" onclick="applyReviewRatingFilter(1); highlightSentiment(1);" id="sentiment-card-1" title="نجمة واحدة">
+                  <div class="sentiment-icon">😡</div>
+                  <div class="sentiment-count" id="sent-count-1">0</div>
+                  <div class="sentiment-label" data-i18n="rating_1">سيئة جدًا</div>
+                </div>
+              </div>
+
+              <div style="margin-top: 1.25rem; display: flex; align-items: center; justify-content: space-between; background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.85rem 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+                <span style="font-size: 0.9rem; font-weight: 600; color: var(--color-primary-dark);" data-i18n="eval_prompt_rate">
+                  جرّب المنصة وشارك تقييمك ليظهر في الرسم فوراً!
+                </span>
+                <button class="btn btn-primary btn-sm" onclick="openModal('modal-review')">
+                  <i data-lucide="star" style="width: 14px; height: 14px;"></i>
+                  <span data-i18n="eval_btn_rate_now">قيّمنا الآن</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. Call to Action Banner -->
+      <section class="container">
+        <div class="cta-banner">
+          <h2 data-i18n="cta_title">ابدأ الآن في فحص دواءك بأعلى درجات الدقة</h2>
+          <p data-i18n="cta_desc">ابحث بالاسم التجاري، اقرأ النشرة الطبية بسهولة، أو اسأل المساعد الطبي الرقمي.</p>
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <button class="btn btn-secondary btn-lg" onclick="navigateTo('search')" data-i18n="cta_btn_search">ابحث عن دواء الآن</button>
+            <button class="btn btn-outline btn-lg" style="color: white; border-color: white;" onclick="navigateTo('assistant')" data-i18n="cta_btn_assistant">تحدث مع المساعد الذكي</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10. Medical Disclaimer Banner -->
+      <div class="container">
+        <div class="disclaimer-box" role="alert">
+          <div class="disclaimer-icon">⚠️</div>
+          <div class="disclaimer-text" data-i18n="disclaimer_banner">
+            تنبيه طبي وقانوني هام: منصة دوائي AI منصة إرشادية وتثقيفية مبنية على النشرات الرسمية المعتمدة لهيئات الغذاء والدواء. المعلومات الواردة لا تغني إطلاقاً عن استشارة الطبيب البشري المختص أو الصيدلي المرخص، ولا يجوز الاعتماد عليها في تشخيص الأمراض أو تعديل الجرعات الدوائية.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== VIEW 2: MEDICINE SEARCH ==================== -->
+    <div id="panel-search" class="view-panel" style="display: none; padding: 3rem 0;">
+      <div class="container">
+        <div class="section-header">
+          <h2 data-i18n="search_page_title">دليل الأدوية المعتمدة والموثقة</h2>
+          <p id="search-results-count" style="font-weight: 600; color: var(--color-primary);"></p>
+        </div>
+
+        <!-- Classification Filter Tabs -->
+        <div class="search-classification-tabs" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+          <button type="button" class="btn btn-sm btn-outline filter-tab active" data-class="registered_drug" onclick="setClassificationFilter('registered_drug')" style="border-radius: var(--radius-full); font-weight: 700;">
+            💊 <span data-i18n="filter_drugs">أدوية بشرية مسجلة</span>
+          </button>
+          <button type="button" class="btn btn-sm btn-outline filter-tab" data-class="" onclick="setClassificationFilter('')" style="border-radius: var(--radius-full); font-weight: 700;">
+            🌐 <span data-i18n="filter_all">كافة المنتجات</span>
+          </button>
+          <button type="button" class="btn btn-sm btn-outline filter-tab" data-class="dietary_supplement" onclick="setClassificationFilter('dietary_supplement')" style="border-radius: var(--radius-full); font-weight: 700;">
+            🌿 <span data-i18n="filter_supplements">مكملات غذائية وفيتامينات</span>
+          </button>
+          <button type="button" class="btn btn-sm btn-outline filter-tab" data-class="cosmetic_care" onclick="setClassificationFilter('cosmetic_care')" style="border-radius: var(--radius-full); font-weight: 700;">
+            🧴 <span data-i18n="filter_care">مستحضرات عناية ونظافة</span>
+          </button>
+          <button type="button" class="btn btn-sm btn-outline filter-tab" data-class="medical_device" onclick="setClassificationFilter('medical_device')" style="border-radius: var(--radius-full); font-weight: 700;">
+            🩺 <span data-i18n="filter_devices">مستلزمات وأجهزة</span>
+          </button>
+        </div>
+
+        <div style="background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm); display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+          <div style="flex-grow: 1; min-width: 260px; position: relative;">
+            <input type="text" id="medicine-search-input" class="form-control" style="padding-inline-start: 2.75rem;" data-i18n-placeholder="search_input_placeholder" placeholder="ابحث بالاسم التجاري أو المادة الفعالة أو العرض (صداع، حموضة...)...">
+            <i data-lucide="search" style="position: absolute; top: 50%; transform: translateY(-50%); inset-inline-start: 1rem; color: var(--color-text-secondary); width: 20px; height: 20px;"></i>
+          </div>
+          <select id="medicine-category-select" class="form-control" style="width: auto; min-width: 180px;" onchange="triggerSearch()">
+            <option value="" data-i18n="search_all_categories">كافة التخصصات العلاجية</option>
+            <option value="Analgesics" data-i18n="cat_opt_analgesics">مسكنات الألم وخافضات الحرارة</option>
+            <option value="Antibiotics" data-i18n="cat_opt_antibiotics">مضادات حيوية</option>
+            <option value="NSAIDs" data-i18n="cat_opt_nsaids">مضادات الالتهاب</option>
+            <option value="Antidiabetics" data-i18n="cat_opt_diabetes">أدوية السكري</option>
+            <option value="Proton Pump" data-i18n="cat_opt_gi">مضادات حموضة المعدة</option>
+            <option value="Statins" data-i18n="cat_opt_cholesterol">أدوية الكوليسترول والدهون</option>
+            <option value="Antihistamines" data-i18n="cat_opt_allergy">مضادات الحساسية</option>
+            <option value="Bronchodilators" data-i18n="cat_opt_respiratory">موسعات الشعب الهوائية</option>
+          </select>
+          <select id="medicine-sort-select" class="form-control" style="width: auto; min-width: 160px;" onchange="triggerSearch()">
+            <option value="relevance" data-i18n="sort_relevance">الترتيب: الأنسب</option>
+            <option value="name_asc" data-i18n="sort_name_asc">الاسم (أ - ي)</option>
+            <option value="price_asc" data-i18n="sort_price_asc">السعر: الأقل أولاً</option>
+            <option value="price_desc" data-i18n="sort_price_desc">السعر: الأعلى أولاً</option>
+          </select>
+          <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; cursor: pointer; user-select: none;">
+              <input type="checkbox" id="filter-pediatric" onchange="triggerSearch()">
+              <span>👶 <span data-i18n="filter_pediatric">مصرح للأطفال</span></span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; cursor: pointer; user-select: none;">
+              <input type="checkbox" id="filter-pregnancy" onchange="triggerSearch()">
+              <span>🤰 <span data-i18n="filter_pregnancy">آمن للحامل</span></span>
+            </label>
+          </div>
+          <button class="btn btn-primary" onclick="triggerSearch()" data-i18n="search_btn">بحث</button>
+        </div>
+
+        <!-- Interactive Therapeutic Category Chips Bar -->
+        <div style="margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <span style="font-size: 0.88rem; font-weight: 700; color: var(--color-primary-dark);" data-i18n="chips_heading">🏷️ تصفح حسب التخصص العلاجي:</span>
+            <span style="font-size: 0.78rem; color: var(--color-text-secondary);" data-i18n="chips_subheading">اختر تصنيفاً لعرض أدويته المعتمدة فوراً</span>
+          </div>
+          <div id="search-category-chips" class="category-chips-scroll">
+            <!-- Dynamically populated from /api/medicines/categories with exact live DB counts -->
+          </div>
+        </div>
+
+        <!-- ==================== ANIMATED REGISTERED MEDICINES SHOWCASE ==================== -->
+        <div id="registered-medicines-showcase" class="registered-showcase-wrapper">
+          <div class="showcase-top-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+              <div style="display: inline-flex; align-items: center; gap: 0.45rem; background: rgba(37, 99, 235, 0.1); color: #2563EB; padding: 0.3rem 0.8rem; border-radius: var(--radius-full); font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem;">
+                <span class="pulsing-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #2563EB; display: inline-block;"></span>
+                <span data-i18n="showcase_badge">✨ السجل الدوائي المعتمد 2026 (17,167 دواء)</span>
+              </div>
+              <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--color-primary-dark); margin: 0;" data-i18n="showcase_title">
+                المعرض التفاعلي للأدوية المسجلة حسب التخصص العلاجي
+              </h3>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <button type="button" id="btn-showcase-prev" class="btn btn-outline btn-sm" onclick="showcasePrevMed()" title="السابق" style="padding: 0.4rem 0.65rem;">
+                <i data-lucide="chevron-left" style="width: 16px; height: 16px;"></i>
+              </button>
+              <button type="button" id="btn-showcase-toggle" class="btn btn-outline btn-sm" onclick="toggleShowcaseAutoplay()" style="font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
+                <span id="showcase-toggle-icon">⏸️</span>
+                <span id="showcase-toggle-text" data-i18n="showcase_pause">إيقاف مؤقت</span>
+              </button>
+              <button type="button" id="btn-showcase-next" class="btn btn-outline btn-sm" onclick="showcaseNextMed()" title="التالي" style="padding: 0.4rem 0.65rem;">
+                <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Category Selector Tabs ("ف كل وحده فيهم") -->
+          <div class="showcase-categories-scroll" id="showcase-category-pills" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; margin-bottom: 1.25rem; scrollbar-width: thin;">
+            <!-- Dynamically rendered by initRegisteredShowcase() -->
+          </div>
+
+          <!-- Animated Spotlight Stage Card ("تعرض تلقائي او م ادوس علي اي وحده فيهم") -->
+          <div id="showcase-stage-card-container">
+            <!-- Dynamically rendered active drug card -->
+          </div>
+        </div>
+
+        <!-- Search Results Grid -->
+        <div id="search-results-list" class="quick-cards-grid">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 3: SCAN MEDICINE ==================== -->
+    <div id="panel-scan" class="view-panel" style="display: none; padding: 3rem 0;">
+      <div class="container" style="max-width: 900px;">
+        <div class="section-header">
+          <h2 data-i18n="scan_page_title">مسح علبة الدواء بالذكاء الاصطناعي</h2>
+          <p data-i18n="scan_page_desc">ارفع صورة لأي علبة دواء في العالم وسيتعرف عليه الذكاء الاصطناعي فوراً ويقدم لك تقريراً طبياً شاملاً.</p>
+        </div>
+
+        <!-- Upload Area -->
+        <div id="scan-upload-zone" class="scan-upload-zone" onclick="document.getElementById('scan-file-input').click()" ondragover="handleScanDragOver(event)" ondragleave="handleScanDragLeave(event)" ondrop="handleScanFileDrop(event)">
+          <div id="scan-preview-container" style="display: none;">
+            <img id="scan-preview-img" alt="معاينة" style="max-height: 220px; border-radius: var(--radius-md); margin-bottom: 1rem; box-shadow: var(--shadow-md);">
+          </div>
+          <div id="scan-upload-prompt">
+            <i data-lucide="upload-cloud" style="width: 56px; height: 56px; color: var(--color-primary-purple); margin-bottom: 1rem;"></i>
+            <h3 style="margin-bottom: 0.5rem; color: var(--color-primary-dark);" data-i18n="scan_dropzone">اسحب صورة علبة الدواء هنا، أو انقر للاختيار</h3>
+            <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 0.25rem;" data-i18n="scan_formats_supported">يدعم صور JPG و PNG و WEBP لأي دواء في العالم</p>
+            <p style="font-size: 0.8rem; color: var(--color-primary);" data-i18n="scan_auto_detect_badge">📸 يتم التعرف تلقائياً على أي دواء عبر الذكاء الاصطناعي</p>
+          </div>
+          <input type="file" id="scan-file-input" accept="image/*" capture="environment" style="display: none;" onchange="handleScanFileSelected(event)">
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 1.25rem; flex-wrap: wrap;">
+          <button id="scan-analyze-btn" class="btn btn-primary btn-lg" onclick="runAIScan()" disabled>
+            <i data-lucide="sparkles" style="width: 20px; height: 20px;"></i>
+            <span data-i18n="scan_btn_analyze">تحليل بالذكاء الاصطناعي</span>
+          </button>
+          <button class="btn btn-secondary" onclick="document.getElementById('scan-file-input').click()">
+            <i data-lucide="camera" style="width: 18px; height: 18px;"></i>
+            <span data-i18n="scan_btn_choose_other">اختيار صورة أخرى</span>
+          </button>
+        </div>
+
+        <!-- 3 Quick Demo Samples for Testing -->
+        <div style="background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.25rem; margin-top: 1.5rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <h4 style="margin: 0; color: var(--color-primary-dark); font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem;">
+              <i data-lucide="sparkles" style="width: 16px; height: 16px; color: var(--color-primary-purple);"></i>
+              <span data-i18n="scan_samples_label">عينات تجريبية سريعة بنقرة واحدة:</span>
+            </h4>
+            <span style="font-size: 0.8rem; color: var(--color-text-secondary);" data-i18n="scan_sample_pill_title">اختبار فوري لأشهر الأدوية السريرية</span>
+          </div>
+          <div class="quick-demo-container">
+            <button class="quick-demo-pill" onclick="runAIScanWithText('Panadol Advance 500mg Paracetamol Film-coated Tablets GSK')" data-i18n="scan_sample_panadol">
+              💊 بنادول أدفانس 500 ملغ (مسكن وخافض حرارة)
+            </button>
+            <button class="quick-demo-pill" onclick="runAIScanWithText('Augmentin 1g Amoxicillin Clavulanic Acid Tablets GSK')" data-i18n="scan_sample_augmentin">
+              💊 أوجمنتين 1 غرام (مضاد حيوي واسع المجال)
+            </button>
+            <button class="quick-demo-pill" onclick="runAIScanWithText('Omeprazole 20mg Gastro-resistant Capsules')" data-i18n="scan_sample_omeprazole">
+              💊 أوميبرازول 20 ملغ (مضاد حموضة وقرحة)
+            </button>
+          </div>
+        </div>
+
+        <!-- Interactive Skeleton Loading Indicator -->
+        <div id="scan-loading" style="display: none; padding: 2rem 0;">
+          <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div class="scan-loading-spinner"></div>
+            <p style="margin-top: 1rem; font-weight: 700; color: var(--color-primary-dark); font-size: 1.1rem;" id="scan-loading-text" data-i18n="scan_loading_main">
+              جارٍ تحليل الصورة بالذكاء الاصطناعي واستخراج البيانات الطبية...
+            </p>
+            <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-top: 0.25rem;" data-i18n="scan_loading_sub">
+              يتم استخراج النصوص وفحص السجلات ومطابقة معايير هيئة الغذاء والدواء
+            </p>
+          </div>
+          <!-- Shimmer skeleton preview cards -->
+          <div class="scan-skeleton-loader">
+            <div class="skeleton-shimmer skeleton-header-bar"></div>
+            <div class="skeleton-shimmer skeleton-badge-bar"></div>
+            <div class="skeleton-cards-grid">
+              <div class="skeleton-shimmer skeleton-card-item"></div>
+              <div class="skeleton-shimmer skeleton-card-item"></div>
+              <div class="skeleton-shimmer skeleton-card-item"></div>
+              <div class="skeleton-shimmer skeleton-card-item"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Report Results -->
+        <div id="scan-ai-results" style="display: none; margin-top: 2rem;">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Legacy results box (kept for backward compatibility) -->
+        <div id="scan-results-box" style="display: none; background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.75rem; margin-top: 2rem;">
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW: DRUG INTERACTIONS CHECKER ==================== -->
+    <div id="panel-interactions" class="view-panel" style="display: none; padding: 3rem 0;">
+      <div class="container" style="max-width: 900px;">
+        <div class="section-header">
+          <h2 data-i18n="interactions_page_title">فاحص التداخلات الدوائية والتآزر السريري</h2>
+          <p data-i18n="interactions_page_desc">افحص فوراً أي تعارض أو تآزر بين دوائين بالاسم التجاري أو المادة الفعالة بدقة سريرية ومطابقة معتمدة من هيئات الغذاء والدواء.</p>
+        </div>
+
+        <div style="background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
+          <h4 style="color: var(--color-primary-dark); margin-bottom: 0.75rem; font-size: 0.95rem;" data-i18n="inter_quick_combos_heading">
+            ⚡ تركيبات سريرية شائعة للفحص السريع:
+          </h4>
+          <div class="quick-demo-container" style="margin-bottom: 1.5rem;">
+            <button class="quick-demo-pill" onclick="setInteractionInputs('بنادول', 'بروفين')" data-i18n="combo_panadol_brufen">💊 بنادول + بروفين</button>
+            <button class="quick-demo-pill" onclick="setInteractionInputs('أسبرين', 'وارفارين')" data-i18n="combo_aspirin_warfarin">⚠️ أسبرين + وارفارين</button>
+            <button class="quick-demo-pill" onclick="setInteractionInputs('بلافيكس', 'أوميبرازول')" data-i18n="combo_plavix_omeprazole">⛔ بلافيكس + أوميبرازول</button>
+            <button class="quick-demo-pill" onclick="setInteractionInputs('ليبيتور', 'كلاسيد')" data-i18n="combo_lipitor_klacid">⚠️ ليبيتور + كلاسيد</button>
+            <button class="quick-demo-pill" onclick="setInteractionInputs('أوجمنتين', 'بروبيوتيك')" data-i18n="combo_augmentin_probiotic">💡 أوجمنتين + بروبيوتيك</button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center;">
+            <div>
+              <label class="form-label" data-i18n="inter_lbl_med1">الدواء الأول (تجاري أو علمي):</label>
+              <input type="text" id="panel-med-1-input" class="form-control" placeholder="مثال: بنادول، أسبرين، بلافيكس..." value="بنادول">
+            </div>
+            <div style="font-size: 1.75rem; font-weight: 800; color: var(--color-primary-purple); text-align: center; padding-top: 1.5rem;">+</div>
+            <div>
+              <label class="form-label" data-i18n="inter_lbl_med2">الدواء الثاني (تجاري أو علمي):</label>
+              <input type="text" id="panel-med-2-input" class="form-control" placeholder="مثال: بروفين، وارفارين، أوميبرازول..." value="بروفين">
+            </div>
+          </div>
+
+          <div style="margin-top: 1.5rem; text-align: center;">
+            <button class="btn btn-primary btn-lg" onclick="runPanelInteractionCheck()">
+              <i data-lucide="activity"></i>
+              <span data-i18n="inter_btn_check">فحص التداخل الدوائي الآن</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Result container -->
+        <div id="panel-interactions-result" style="display: none;"></div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 4: LEAFLET READER ==================== -->
+    <div id="panel-leaflet" class="view-panel" style="display: none; padding: 3rem 0;">
+      <div class="container" style="max-width: 860px;">
+        <div class="section-header">
+          <h2 data-i18n="leaflet_page_title">قارئ النشرة الطبية وتبسيط المصطلحات</h2>
+          <p data-i18n="leaflet_page_desc">اقرأ النشرة الطبية مقسمة إلى بنود واضحة، مع ميزة التبسيط الفوري للمصطلحات الصيدلانية المعقدة.</p>
+        </div>
+
+        <div style="background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 2rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+            <label class="form-label" style="margin: 0;" data-i18n="leaflet_paste_label">الصق نص النشرة الطبية هنا أو اختر عينة معتمدة:</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-secondary btn-sm" onclick="loadLeafletSample('panadol')" data-i18n="leaflet_sample_panadol">بنادول</button>
+              <button class="btn btn-secondary btn-sm" onclick="loadLeafletSample('augmentin')" data-i18n="leaflet_sample_augmentin">أوجمنتين</button>
+              <button class="btn btn-secondary btn-sm" onclick="loadLeafletSample('glucophage')" data-i18n="leaflet_sample_glucophage">جلوكوفاج</button>
+            </div>
+          </div>
+
+          <textarea id="leaflet-raw-input" class="form-control" style="min-height: 140px; margin-bottom: 1.25rem;" placeholder="الصق نص النشرة الداخلية للدواء هنا..."></textarea>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: 600; font-size: 0.95rem;">
+              <input type="checkbox" id="leaflet-simplify-toggle" checked style="width: 18px; height: 18px; accent-color: var(--color-primary);">
+              <span data-i18n="leaflet_toggle_simplify">تبسيط المصطلحات الطبية المعقدة</span>
+            </label>
+            <button class="btn btn-primary" onclick="parseLeafletText()" data-i18n="leaflet_btn_parse">تحليل وتبسيط النشرة</button>
+          </div>
+        </div>
+
+        <!-- Parsed Leaflet Sections Container -->
+        <div id="leaflet-parsed-sections">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 5: AI ASSISTANT ==================== -->
+    <div id="panel-assistant" class="view-panel" style="display: none; padding: 3rem 0;">
+      <div class="container" style="max-width: 860px;">
+        <div class="section-header">
+          <h2 data-i18n="assistant_page_title">المساعد الطبي الدوائي الذكي</h2>
+          <p data-i18n="assistant_page_desc">مساعد رقمي موجه بالسلامة الدوائية، يقدم إجابات مبنية على النشرات المعتمدة مع ذكر المراجع الرسمية.</p>
+        </div>
+
+        <div style="background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; height: 600px;">
+          <!-- Chat Log Area -->
+          <div id="assistant-chat-log" style="flex-grow: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column;">
+            <div style="align-self: flex-start; background: var(--color-bg-light); border: 1px solid var(--color-border); padding: 1.25rem; border-radius: var(--radius-lg); max-width: 85%; margin-bottom: 1rem;">
+              <p style="margin-bottom: 0.5rem; font-weight: 700; color: var(--color-primary-dark);" data-i18n="chat_welcome_title">مرحباً بك في دوائي AI 👋</p>
+              <p style="font-size: 0.95rem; color: var(--color-text-main);" data-i18n="chat_welcome_desc">
+                أنا مساعدك الطبي الذكي. اسألني عن دواعي استخدام الأدوية، الجرعات المعتمدة، موانع الاستعمال، أو مدى أمان الدواء خلال فترات الحمل والرضاعة.
+              </p>
+            </div>
+          </div>
+
+          <!-- Suggested Clinical & Symptom Prompts -->
+          <div style="padding: 0.75rem 1.25rem; background: var(--color-bg-light); border-top: 1px solid var(--color-border); display: flex; gap: 0.5rem; overflow-x: auto;">
+            <button class="btn btn-secondary btn-sm" onclick="sendAssistantMessage('عندي صداع شديد اخد ايه؟')" data-i18n="chat_prompt_headache">عندي صداع شديد اخد ايه؟</button>
+            <button class="btn btn-secondary btn-sm" onclick="sendAssistantMessage('عايز علاج لحموضة وحرقان المعدة والارتجاع')" data-i18n="chat_prompt_gerd">علاج لحموضة المعدة والارتجاع</button>
+            <button class="btn btn-secondary btn-sm" onclick="sendAssistantMessage('عندي مغص وتقلصات في بطني')" data-i18n="chat_prompt_cramps">علاج للمغص والتقلصات</button>
+            <button class="btn btn-secondary btn-sm" onclick="sendAssistantMessage('علاج للكحة والبلغم')" data-i18n="chat_prompt_cough">علاج للكحة والبلغم</button>
+            <button class="btn btn-secondary btn-sm" onclick="sendAssistantMessage('علاج للزكام والرشح واحتقان الأنف')" data-i18n="chat_prompt_cold">علاج للزكام والرشح</button>
+            <button class="btn btn-secondary btn-sm" onclick="sendAssistantMessage('هل البنادول آمن للحامل؟')" data-i18n="assistant_suggested_1">هل البنادول آمن أثناء الحمل؟</button>
+          </div>
+
+          <!-- Input Bar -->
+          <div style="padding: 1rem 1.25rem; border-top: 1px solid var(--color-border); background: var(--color-white); display: flex; gap: 0.75rem;">
+            <input type="text" id="assistant-chat-input" class="form-control" data-i18n-placeholder="assistant_input_placeholder" placeholder="اكتب سؤالك الدوائي هنا..." onkeydown="if(event.key==='Enter') sendAssistantMessage()">
+            <button class="btn btn-primary" onclick="sendAssistantMessage()">
+              <i data-lucide="send"></i>
+              <span data-i18n="assistant_btn_send">إرسال</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 6: DEDICATED LOGIN & REGISTRATION SHOWCASE ==================== -->
+    <div id="panel-login" class="view-panel" style="display: none; padding: 2.5rem 0;">
+      <div class="container" style="max-width: 1140px;">
+        <div class="login-showcase-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; align-items: stretch;">
+          
+          <!-- Left Column: Medical Platform Mission & Capabilities Showcase -->
+          <div class="login-showcase-info" style="background: linear-gradient(145deg, #0A0F2D 0%, #171E4A 50%, #251B4E 100%); border-radius: var(--radius-xl); padding: 3rem 2.5rem; color: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-lg); border: 1px solid rgba(124, 58, 237, 0.3); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -50px; right: -50px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(124, 58, 237, 0.35) 0%, transparent 70%); border-radius: 50%; pointer-events: none;"></div>
+            
+            <div>
+              <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.4rem 0.9rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 700; color: #93C5FD; margin-bottom: 1.5rem;">
+                <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+                <span data-i18n="login_badge_showcase">منصة المعلومات الدوائية المعتمدة 2026</span>
+              </div>
+
+              <h1 style="font-size: 2.2rem; font-weight: 800; line-height: 1.35; margin-bottom: 1rem; color: #FFFFFF;" data-i18n="login_hero_title">
+                رعايتك الصحية تبدأ بفهم دوائك بدقة وموثوقية
+              </h1>
+
+              <p style="font-size: 1.05rem; line-height: 1.7; color: #E2E8F0; margin-bottom: 2rem;" data-i18n="login_hero_desc">
+                انضم إلى دوائي AI للوصول إلى أدق قاعدة بيانات دوائية موثقة، وفحص التداخلات، ومسح العلب بالذكاء الاصطناعي مع حفظ كامل لسجل أبحاثك الدوائية.
+              </p>
+
+              <!-- Features Grid -->
+              <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+                <div style="display: flex; gap: 1rem; align-items: flex-start; background: rgba(255, 255, 255, 0.06); padding: 1rem 1.15rem; border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.1);">
+                  <div style="background: #2563EB; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i data-lucide="database" style="width: 20px; height: 20px; color: white;"></i>
+                  </div>
+                  <div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; color: #FFFFFF;" data-i18n="login_feat_1_title">17,167 دواء معتمد ومسجل</h4>
+                    <p style="font-size: 0.85rem; color: #CBD5E1; margin: 0; line-height: 1.5;" data-i18n="login_feat_1_desc">دليل صيدلاني دقيق موثق من هيئة الدواء المصرية يشمل التركيزات والأشكال ودواعي الاستعمال.</p>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; align-items: flex-start; background: rgba(255, 255, 255, 0.06); padding: 1rem 1.15rem; border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.1);">
+                  <div style="background: #7C3AED; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i data-lucide="scan-line" style="width: 20px; height: 20px; color: white;"></i>
+                  </div>
+                  <div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; color: #FFFFFF;" data-i18n="login_feat_2_title">ماسح العلب بالذكاء الاصطناعي</h4>
+                    <p style="font-size: 0.85rem; color: #CBD5E1; margin: 0; line-height: 1.5;" data-i18n="login_feat_2_desc">التقط صورة علبة الدواء وتعرف فوراً على المادة الفعالة والجرعات والتحذيرات السريرية.</p>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; align-items: flex-start; background: rgba(255, 255, 255, 0.06); padding: 1rem 1.15rem; border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.1);">
+                  <div style="background: #E11D48; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i data-lucide="shield-alert" style="width: 20px; height: 20px; color: white;"></i>
+                  </div>
+                  <div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; color: #FFFFFF;" data-i18n="login_feat_3_title">فحص التداخلات والتعارضات</h4>
+                    <p style="font-size: 0.85rem; color: #CBD5E1; margin: 0; line-height: 1.5;" data-i18n="login_feat_3_desc">تحقق من أمان تناول دوائين معاً وتجنب التعارضات الحادة ومخاطر النزيف أو التسمم.</p>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; align-items: flex-start; background: rgba(255, 255, 255, 0.06); padding: 1rem 1.15rem; border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.1);">
+                  <div style="background: #059669; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i data-lucide="history" style="width: 20px; height: 20px; color: white;"></i>
+                  </div>
+                  <div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; color: #FFFFFF;" data-i18n="login_feat_4_title">سجل شخصي آمن ومحفوظ</h4>
+                    <p style="font-size: 0.85rem; color: #CBD5E1; margin: 0; line-height: 1.5;" data-i18n="login_feat_4_desc">كل عملية بحث أو فحص تقوم بها تُحفظ في حسابك لتراجع أدويتك وتاريخك في أي وقت.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trust Bar -->
+            <div style="border-top: 1px solid rgba(255, 255, 255, 0.15); padding-top: 1.25rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #94A3B8; flex-wrap: wrap; gap: 0.75rem;">
+              <span data-i18n="chat_badge_official">✓ مراجع رسمية معتمدة</span>
+              <span data-i18n="chat_badge_privacy">✓ خصوصية طبية مشفرة</span>
+              <span data-i18n="chat_badge_bilingual">✓ ثنائي اللغة (عربي / English)</span>
+            </div>
+          </div>
+
+          <!-- Right Column: Registration & Login Card -->
+          <div class="login-auth-card" style="background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 2.5rem 2.25rem; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; justify-content: center;">
+            
+            <!-- Auth Tab Switcher -->
+            <div style="display: flex; background: var(--color-bg-light); border-radius: var(--radius-lg); padding: 0.35rem; margin-bottom: 1.75rem; border: 1px solid var(--color-border);">
+              <button type="button" id="tab-btn-register" class="btn btn-sm" onclick="switchAuthTab('register')" style="flex: 1; border-radius: var(--radius-md); font-weight: 700; background: var(--color-white); color: var(--color-primary); box-shadow: var(--shadow-sm);">
+                <i data-lucide="user-plus" style="width: 16px; height: 16px; margin-inline-end: 0.35rem;"></i>
+                <span data-i18n="auth_tab_register">إنشاء حساب جديد</span>
+              </button>
+              <button type="button" id="tab-btn-signin" class="btn btn-sm" onclick="switchAuthTab('signin')" style="flex: 1; border-radius: var(--radius-md); font-weight: 600; color: var(--color-text-secondary); background: transparent;">
+                <i data-lucide="log-in" style="width: 16px; height: 16px; margin-inline-end: 0.35rem;"></i>
+                <span data-i18n="auth_tab_signin">تسجيل الدخول</span>
+              </button>
+            </div>
+
+            <!-- TAB 1: REGISTER FORM -->
+            <div id="auth-panel-register">
+              <div style="margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1.45rem; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 0.35rem;" data-i18n="register_title">أنشئ حسابك الطبي الآن</h3>
+                <p style="font-size: 0.9rem; color: var(--color-text-secondary);" data-i18n="register_subtitle">احفظ سجل أدويتك وبحوثاتك واستشاراتك الطبية لمتابعتها في أي وقت.</p>
+              </div>
+
+              <form onsubmit="handleCreateAccount(event)" style="display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1.25rem;">
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--color-text-main);" data-i18n="register_name_label">الاسم الكامل</label>
+                  <input type="text" id="reg-input-name" class="form-input" style="width: 100%;" placeholder="مثال: أحمد محمد أو د. محمود علي" required>
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--color-text-main);" data-i18n="register_email_label">البريد الإلكتروني</label>
+                  <input type="email" id="reg-input-email" class="form-input" style="width: 100%;" placeholder="name@example.com" required>
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--color-text-main);" data-i18n="register_password_label">كلمة المرور (اختياري)</label>
+                  <input type="password" id="reg-input-password" class="form-input" style="width: 100%;" placeholder="••••••••">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--color-text-main);" data-i18n="register_role_label">نوع الحساب</label>
+                  <div style="display: flex; gap: 0.5rem;">
+                    <label style="flex: 1; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.5rem; text-align: center; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #EEF2FF; color: #1E40AF;">
+                      <input type="radio" name="reg-role" value="user" checked style="margin-inline-end: 0.35rem;">
+                      <span data-i18n="role_patient">مريض / مستخدم</span>
+                    </label>
+                    <label style="flex: 1; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.5rem; text-align: center; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: var(--color-bg-light); color: var(--color-text-main);">
+                      <input type="radio" name="reg-role" value="admin" style="margin-inline-end: 0.35rem;">
+                      <span data-i18n="role_doctor">طبيب / صيدلي</span>
+                    </label>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; justify-content: center; margin-top: 0.5rem; font-weight: 700; box-shadow: var(--shadow-md);">
+                  <i data-lucide="user-check" style="width: 18px; height: 18px;"></i>
+                  <span data-i18n="register_submit_btn">✨ إنشاء حسابي والدخول للمنصة</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- TAB 2: SIGNIN FORM -->
+            <div id="auth-panel-signin" style="display: none;">
+              <div style="margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1.45rem; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 0.35rem;" data-i18n="signin_title">مرحباً بعودتك</h3>
+                <p style="font-size: 0.9rem; color: var(--color-text-secondary);" data-i18n="signin_subtitle">سجّل دخولك لمتابعة سجل أدويتك واستشاراتك السابقة.</p>
+              </div>
+
+              <form onsubmit="handleEmailPasswordLogin(event)" style="display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1.25rem;">
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--color-text-main);" data-i18n="login_email_label">البريد الإلكتروني</label>
+                  <input type="email" id="login-input-email" value="demo.patient@dawaai.local" class="form-input" style="width: 100%;" required>
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--color-text-main);" data-i18n="login_password_label">كلمة المرور</label>
+                  <input type="password" id="login-input-password" value="dawaai2026" class="form-input" style="width: 100%;">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; justify-content: center; margin-top: 0.5rem; font-weight: 700;">
+                  <i data-lucide="log-in" style="width: 18px; height: 18px;"></i>
+                  <span data-i18n="login_submit_btn">تسجيل الدخول</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- Quick One-Click Options Divider -->
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin: 1rem 0; color: var(--color-text-secondary); font-size: 0.8rem;">
+              <div style="flex: 1; height: 1px; background: var(--color-border);"></div>
+              <span data-i18n="auth_or">أو خيارات سريعة</span>
+              <div style="flex: 1; height: 1px; background: var(--color-border);"></div>
+            </div>
+
+            <!-- One-Click Instant Demo Access -->
+            <button type="button" class="btn btn-outline" style="width: 100%; margin-bottom: 0.65rem; justify-content: center; border-color: var(--color-primary-blue); color: var(--color-primary-blue); font-weight: 700; background: #F0F7FF;" onclick="handleInstantLogin()">
+              <i data-lucide="zap" style="width: 18px; height: 18px; color: #2563EB;"></i>
+              <span data-i18n="login_instant_demo">⚡ تجربة فورية بحساب مريض تجريبي</span>
+            </button>
+
+            <!-- Google Sign-in Mock/Live -->
+            <button type="button" class="btn btn-outline" style="width: 100%; margin-bottom: 1.25rem; justify-content: center;" onclick="handleMockGoogleLogin()">
+              <svg width="18" height="18" viewBox="0 0 24 24" style="margin-inline-end: 0.5rem;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+              <span data-i18n="login_google_btn">المتابعة باستخدام Google</span>
+            </button>
+
+            <!-- Guest Bypass Link -->
+            <div style="text-align: center; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+              <a href="javascript:void(0)" onclick="handleContinueAsGuest()" style="color: var(--color-text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 600;" data-i18n="login_guest_bypass">
+                تخطي والمتابعة كزائر دون تسجيل ←
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW: USER ACTIVITY HISTORY & PROFILE DASHBOARD ==================== -->
+    <div id="panel-history" class="view-panel" style="display: none; padding: 3rem 0;">
+      <div class="container" style="max-width: 960px;">
+        
+        <!-- Header -->
+        <div class="section-header" style="margin-bottom: 2rem;">
+          <h2 data-i18n="history_page_title">سجلي ونشاطي الطبي</h2>
+          <p data-i18n="history_page_subtitle">تتبع كافة الأدوية التي بحثت عنها، واستشاراتك، ومسح العلب المحفوظ في حسابك.</p>
+        </div>
+
+        <!-- Profile & Summary Card -->
+        <div id="history-profile-card" style="background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 2rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm);">
+          <!-- Dynamic Profile Content -->
+        </div>
+
+        <!-- Timeline Filters & Actions -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div class="history-filter-tabs" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="btn btn-sm btn-outline active" data-filter="all" onclick="filterHistory('all')" style="border-radius: var(--radius-full); font-weight: 700;">
+              <span data-i18n="history_filter_all">🌐 كافة الأنشطة</span>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline" data-filter="medicine_search" onclick="filterHistory('medicine_search')" style="border-radius: var(--radius-full); font-weight: 700;">
+              <span data-i18n="history_filter_searches">🔍 عمليات البحث</span>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline" data-filter="medicine_view" onclick="filterHistory('medicine_view')" style="border-radius: var(--radius-full); font-weight: 700;">
+              <span data-i18n="history_filter_views">💊 الأدوية المعروضة</span>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline" data-filter="medicine_scanned" onclick="filterHistory('medicine_scanned')" style="border-radius: var(--radius-full); font-weight: 700;">
+              <span data-i18n="history_filter_scans">📷 مسح العلب</span>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline" data-filter="assistant_explanation" onclick="filterHistory('assistant_explanation')" style="border-radius: var(--radius-full); font-weight: 700;">
+              <span data-i18n="history_filter_assistant">🤖 استشارات المساعد</span>
+            </button>
+          </div>
+
+          <button type="button" class="btn btn-outline btn-sm" onclick="handleClearHistory()" style="color: var(--color-error); border-color: rgba(239, 68, 68, 0.4);" title="مسح السجل بالكامل">
+            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+            <span data-i18n="history_clear_btn">مسح السجل</span>
+          </button>
+        </div>
+
+        <!-- History Timeline Container -->
+        <div id="history-timeline-container" style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="text-align: center; padding: 3rem; background: var(--color-white); border-radius: var(--radius-lg); border: 1px solid var(--color-border);">
+            <div class="scan-loading-spinner" style="width: 32px; height: 32px; margin: 0 auto 1rem;"></div>
+            <p style="color: var(--color-text-secondary);" data-i18n="history_loading_text">جارٍ تحميل سجل نشاطك الطبي...</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 7: ABOUT PAGE ==================== -->
+    <div id="panel-about" class="view-panel" style="display: none; padding: 3rem 0;">
+      <div class="container" style="max-width: 860px;">
+        <div class="section-header">
+          <h2 data-i18n="about_title">عن منصة دوائي AI (Dawaa'i)</h2>
+          <p data-i18n="about_subtitle">منصة رقمية رائدة لتيسير قراءة النشرات الطبية وفهم المعلومات الدوائية باللغتين العربية والإنجليزية.</p>
+        </div>
+        <div style="background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 2rem; line-height: 1.8;">
+          <h3 style="margin-bottom: 0.75rem; color: var(--color-primary-dark);" data-i18n="about_sec1_title">الرؤية والهدف السريري</h3>
+          <p style="margin-bottom: 1.25rem;" data-i18n="about_sec1_desc">
+            تهدف منصة دوائي AI إلى تمكين المرضى ومقدمي الرعاية الصحية من الوصول السريع والموثوق لمعلومات الأدوية المسجلة، وتحويل النشرات الطبية ذات الصياغة المعقدة إلى شروحات مفهومة وآمنة تدعم اتخاذ القرارات الصحية السليمة دون المساس بسلامة المريض.
+          </p>
+
+          <h3 style="margin-bottom: 0.75rem; color: var(--color-primary-dark);" data-i18n="about_sec2_title">منهجية البيانات والشفافية</h3>
+          <p style="margin-bottom: 1.25rem;" data-i18n="about_sec2_desc">
+            تعتمد المنصة على قواعد البيانات المعتمدة لهيئات الغذاء والدواء مثل الهيئة العامة للغذاء والدواء بالمملكة العربية السعودية (SFDA)، وإدارة الغذاء والدواء الأمريكية (US FDA)، ووكالة الأدوية الأوروبية (EMA). لا يقوم النظام باختراع أو استنتاج أي معلومات سريرية خارج المراجع الرسمية.
+          </p>
+
+          <h3 style="margin-bottom: 0.75rem; color: var(--color-primary-dark);" data-i18n="about_sec3_title">الخصوصية والأمان</h3>
+          <p data-i18n="about_sec3_desc">
+            تلتزم المنصة بأعلى معايير الخصوصية الرقمية؛ لا يتم تخزين أو بيع أي بيانات صحية خاصة بالمستخدمين، وتخضع جميع التقييمات العامة لإشراف ورقابة تحمي الهوية الشخصية للمراجعين.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 8: ADMIN MODERATION PANEL ==================== -->
+    <div id="panel-admin" class="view-panel" style="display: none; padding: 3rem 0;">
+      <div class="container">
+        <div class="section-header">
+                  <!-- Real-time System & AI Provider Health Dashboard -->
+        <div style="background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 1.75rem; box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h3 style="margin: 0 0 0.25rem 0; color: var(--color-primary-dark); font-size: 1.2rem;" data-i18n="admin_health_title">صحة النظام وخوادم الذكاء الاصطناعي</h3>
+              <p style="margin: 0; font-size: 0.85rem; color: var(--color-text-secondary);" data-i18n="admin_health_subtitle">مراقبة حية لحالة الخادم، وقاعدة البيانات، وقاطع التيار للموديلات</p>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="loadAdminSystemHealth()" style="border-radius: var(--radius-full); font-weight: 700;" data-i18n="admin_btn_refresh">
+              🔄 تحديث المؤشرات
+            </button>
+          </div>
+          <div id="admin-health-grid" class="health-grid">
+            <div style="text-align: center; padding: 2rem; grid-column: 1 / -1;">
+              <p style="color: var(--color-primary); font-weight: 600;" data-i18n="admin_health_checking">جارٍ فحص استجابة السيرفر ونماذج الذكاء الاصطناعي...</p>
+            </div>
+          </div>
+          <div id="admin-health-errors-container" style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
+            <!-- Errors or Operational status -->
+          </div>
+        </div>
+
+        <h2 data-i18n="nav_admin">إدارة التقييمات والمراجعات</h2>
+          <p data-i18n="admin_reviews_subtitle">مراجعة آراء المستخدمين واعتمادها مع الحفاظ على النزاهة الإحصائية للتقييم الرقمي.</p>
+        </div>
+
+        <div style="background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-xl); overflow-x: auto; box-shadow: var(--shadow-sm);">
+          <table style="width: 100%; border-collapse: collapse; text-align: start;">
+            <thead>
+              <tr style="background: var(--color-bg-light); border-bottom: 1px solid var(--color-border);">
+                <th style="padding: 1rem;" data-i18n="th_user">المستخدم</th>
+                <th style="padding: 1rem;" data-i18n="th_rating">التقييم</th>
+                <th style="padding: 1rem;" data-i18n="th_comment">التعليق</th>
+                <th style="padding: 1rem;" data-i18n="th_category">الفئة</th>
+                <th style="padding: 1rem;" data-i18n="th_status">الحالة</th>
+                <th style="padding: 1rem;" data-i18n="th_action">الإجراء</th>
+              </tr>
+            </thead>
+            <tbody id="admin-reviews-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== 11. PROFESSIONAL FOOTER ==================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <div class="brand-icon-box" style="width: 36px; height: 36px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/>
+                <path d="m8.5 8.5 7 7"/>
+              </svg>
+            </div>
+            <h3 style="margin: 0; color: white;" data-i18n="brand_name">دوائي AI</h3>
+          </div>
+          <p data-i18n="footer_about_text">
+            دوائي AI — المنصة الذكية الرائدة لتيسير قراءة النشرات الطبية وفهم معلومات الأدوية باللغتين العربية والإنجليزية، وفق مراجع هيئات الدواء المعتمدة.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4 data-i18n="footer_quick_links">روابط سريعة</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="navigateTo('home')" data-i18n="nav_home">الرئيسية</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('search')" data-i18n="nav_search">بحث الأدوية</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('scan')" data-i18n="nav_scan">مسح الدواء</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('about')" data-i18n="nav_about">عن المنصة</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 data-i18n="footer_features">الخدمات</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="navigateTo('leaflet')" data-i18n="nav_leaflet">قارئ النشرة الطبية</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('assistant')" data-i18n="nav_assistant">المساعد الطبي الذكي</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('search')" data-i18n="footer_link_registry">سجل الأدوية المعتمدة</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 data-i18n="footer_legal">السياسات والشروط</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="openModal('modal-privacy')" data-i18n="footer_privacy">سياسة الخصوصية</a></li>
+            <li><a href="javascript:void(0)" onclick="openModal('modal-terms')" data-i18n="footer_terms">شروط الاستخدام</a></li>
+            <li><a href="javascript:void(0)" onclick="openModal('modal-disclaimer')" data-i18n="footer_disclaimer_link">إخلاء المسؤولية الطبية</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          <span class="current-year">2026</span> © <span data-i18n="brand_name">دوائي AI</span><span data-i18n="footer_rights">. جميع الحقوق محفوظة.</span>
+        </div>
+        <div>
+          <span data-i18n="footer_tagline">افهم دواءك، بطريقة أوضح. • Understand Your Medicine.</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== MANDATORY FIRST-USE REVIEW DIALOG ==================== -->
+  <div id="modal-review" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="review-modal-title">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="dismissReviewTemporarily()" aria-label="Dismiss Modal">✕</button>
+
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <div style="width: 50px; height: 50px; border-radius: 50%; background: #FFF9ED; color: #F5A623; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; font-size: 1.5rem;">
+          ★
+        </div>
+        <h2 id="review-modal-title" data-i18n="modal_review_title" style="font-size: 1.5rem; margin-bottom: 0.35rem;">ما رأيك في تجربتك مع دوائي؟</h2>
+        <p data-i18n="modal_review_subtitle" style="font-size: 0.95rem;">رأيك يساعدنا على تحسين الموقع وتقديم تجربة أفضل للجميع.</p>
+      </div>
+
+      <form onsubmit="handleReviewSubmit(event)">
+        <!-- 5 Accessible Rating Star Buttons with Labels -->
+        <div style="text-align: center; margin-bottom: 0.5rem;">
+          <label class="form-label" data-i18n="modal_review_rating_label">اختر تقييمك (مطلوب):</label>
+          <div class="rating-selector-buttons">
+            <button type="button" class="rating-star-btn" data-rating="1" onclick="selectReviewRating(1)">
+              ★
+              <span class="star-label" data-i18n="rating_1">سيئة جدًا</span>
+            </button>
+            <button type="button" class="rating-star-btn" data-rating="2" onclick="selectReviewRating(2)">
+              ★
+              <span class="star-label" data-i18n="rating_2">سيئة</span>
+            </button>
+            <button type="button" class="rating-star-btn" data-rating="3" onclick="selectReviewRating(3)">
+              ★
+              <span class="star-label" data-i18n="rating_3">مقبولة</span>
+            </button>
+            <button type="button" class="rating-star-btn" data-rating="4" onclick="selectReviewRating(4)">
+              ★
+              <span class="star-label" data-i18n="rating_4">جيدة جدًا</span>
+            </button>
+            <button type="button" class="rating-star-btn" data-rating="5" onclick="selectReviewRating(5)">
+              ★
+              <span class="star-label" data-i18n="rating_5">ممتازة</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="modal_review_category_label">مجال التقييم:</label>
+          <select id="review-category-select" class="form-control">
+            <option value="ease_of_use" data-i18n="category_ease_of_use">سهولة الاستخدام</option>
+            <option value="medicine_search" data-i18n="category_medicine_search">بحث الأدوية</option>
+            <option value="leaflet_reader" data-i18n="category_leaflet_reader">قارئ النشرة الطبية</option>
+            <option value="ai_explanations" data-i18n="category_ai_explanations">شروحات المساعد الذكي</option>
+            <option value="design" data-i18n="category_design">تصميم المنصة</option>
+            <option value="other" data-i18n="category_other">أخرى</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <textarea id="review-comment-input" class="form-control" data-i18n-placeholder="modal_review_comment_placeholder" placeholder="شاركنا رأيك أو اقتراحاتك الصادقة لتحسين المنصة..."></textarea>
+        </div>
+
+        <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+          <input type="checkbox" id="review-consent-checkbox" checked style="width: 18px; height: 18px; accent-color: var(--color-primary);">
+          <label for="review-consent-checkbox" style="font-size: 0.85rem; color: var(--color-text-secondary); cursor: pointer;" data-i18n="modal_review_consent">
+            أوافق على عرض هذا التقييم في قسم آراء المستخدمين مع إخفاء بياناتي الخاصة.
+          </label>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="dismissReviewTemporarily()" data-i18n="modal_review_later">لاحقاً</button>
+          <button type="submit" id="review-submit-btn" class="btn btn-primary" data-i18n="modal_review_submit">إرسال التقييم</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== INTERACTIVE WALKTHROUGH & CLINICAL CRITERIA MODAL ==================== -->
+  <div id="modal-walkthrough" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content" style="max-width: 760px; max-height: 90vh; overflow-y: auto;">
+      <button class="modal-close-btn" onclick="closeModal('modal-walkthrough')" aria-label="Close">✕</button>
+      <div id="walkthrough-modal-body">
+        <!-- Rendered dynamically via openStepWalkthrough() or openBenefitWalkthrough() -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MEDICINE DETAILS MODAL ==================== -->
+  <div id="modal-medicine" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content" style="max-width: 720px;">
+      <button class="modal-close-btn" onclick="closeModal('modal-medicine')" aria-label="Close">✕</button>
+      <div id="medicine-modal-body">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ONBOARDING MODAL ==================== -->
+  <div id="modal-onboarding" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <h2 data-i18n="onboarding_title">مرحباً بك في منصة دوائي AI</h2>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.75rem; font-size: 0.95rem; line-height: 1.7;">
+        <p data-i18n="onboarding_step_1">1. جميع المعلومات الطبية مرتبطة بمراجع معتمدة من هيئات الدواء الرسمية.</p>
+        <p data-i18n="onboarding_step_2">2. المساعد الذكي يقدم شروحات توضيحية ولا يقدم تشخيصات أو بدائل علاجية.</p>
+        <p data-i18n="onboarding_step_3">3. نطلب رأيك الصادق بعد أول استخدام فعلي لمساعدتنا على التطور المستمر.</p>
+      </div>
+      <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="closeModal('modal-onboarding'); ApiClient.updateOnboarding({ preferred_language: getLanguage() }); navigateTo('home');" data-i18n="onboarding_btn_start">ابدأ استكشاف دوائي</button>
+    </div>
+  </div>
+
+  <!-- ==================== PRIVACY POLICY MODAL ==================== -->
+  <div id="modal-privacy" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeModal('modal-privacy')">✕</button>
+      <h2 style="margin-bottom: 1rem;" data-i18n="footer_privacy">سياسة الخصوصية</h2>
+      <div style="font-size: 0.9rem; line-height: 1.8; color: var(--color-text-main);">
+        <p data-i18n="privacy_p1">تحترم منصة دوائي AI خصوصية جميع الزوار والمستخدمين. نحن لا نقوم بجمع أو مشاركة السجلات الطبية الشخصية، ولا نقوم بربط سجلات التصفح بالهويات الواقعية.</p>
+        <p data-i18n="privacy_p2" style="margin-top: 0.75rem;">تُستخدم جلسات تسجيل الدخول فقط لتقديم تجربة مخصصة وحفظ التفضيلات اللغوية، وتخضع التقييمات العامة لإخفاء الهوية عند النشر لحماية خصوصية المرضى.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TERMS OF USE MODAL ==================== -->
+  <div id="modal-terms" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeModal('modal-terms')">✕</button>
+      <h2 style="margin-bottom: 1rem;" data-i18n="footer_terms">شروط الاستخدام</h2>
+      <div style="font-size: 0.9rem; line-height: 1.8; color: var(--color-text-main);">
+        <p data-i18n="terms_p1">منصة دوائي AI هي خدمة رقمية إرشادية وتثقيفية تهدف إلى تيسير قراءة النشرات الطبية المعتمدة. لا تشكل المعلومات المقدمة استشارة طبية أو تشخيصاً لمرض، ولا يجوز إيقاف أو تعديل أي علاج موصوف من قبل طبيب بشري مرخص استناداً إلى المنصة.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MEDICAL DISCLAIMER MODAL ==================== -->
+  <div id="modal-disclaimer" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeModal('modal-disclaimer')">✕</button>
+      <h2 style="margin-bottom: 1rem; color: var(--color-warning);" data-i18n="footer_disclaimer_link">إخلاء المسؤولية الطبية</h2>
+      <div style="font-size: 0.9rem; line-height: 1.8; color: var(--color-text-main);">
+        <p data-i18n="disclaimer_banner">
+          تنبيه طبي وقانوني هام: منصة دوائي AI منصة إرشادية وتثقيفية مبنية على النشرات الرسمية المعتمدة لهيئات الغذاء والدواء. المعلومات الواردة لا تغني إطلاقاً عن استشارة الطبيب البشري المختص أو الصيدلي المرخص، ولا يجوز الاعتماد عليها في تشخيص الأمراض أو تعديل الجرعات الدوائية.
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- JavaScript Modules -->
+  <script src="/static/js/i18n.js?v=2026.1"></script>
+  <script src="/static/js/api.js?v=2026.1"></script>
+  <script src="/static/js/app.js?v=2026.1"></script>
+
+  <script>
+    // Safeguard for loginLocal
+    if (typeof ApiClient !== "undefined" && typeof ApiClient.loginLocal !== "function") {
+      ApiClient.loginLocal = async function(p = {}) {
+        if (ApiClient.loginDemo) return ApiClient.loginDemo(p);
+        const u = { id: "usr_mock", email: p.email || "demo.patient@dawaai.local", full_name: "مستخدم دوائي موثق", role: "user", has_completed_onboarding: true };
+        localStorage.setItem("dawaai_token", "mock_token_" + Date.now());
+        localStorage.setItem("dawaai_user", JSON.stringify(u));
+        return { access_token: "mock_token", user: u };
+      };
+    }
+
+    function toggleMobileMenu() {
+      const drawer = document.getElementById("mobile-menu-drawer");
+      if (drawer) {
+        drawer.style.display = drawer.style.display === "none" ? "block" : "none";
+      }
+    }
+
+    // Google Identity Services Credential Response
+    async function handleGoogleLoginCallback(response) {
+      if (response && response.credential) {
+        try {
+          await ApiClient.loginWithGoogle(response.credential, getLanguage());
+          updateAuthUI();
+          showToast(getLanguage() === "ar" ? "تم تسجيل الدخول عبر Google بنجاح!" : "Signed in with Google successfully!", "success");
+          navigateTo("home");
+        } catch (err) {
+          showToast("Google sign-in error: " + err.message, "error");
+        }
+      }
+    }
+  </script>
+</body>
+</html>

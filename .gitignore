@@ -1,0 +1,38 @@
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*.local
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache/
+
+# SQLite Databases
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+
+# Operating System & IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large Distribution / Archive Files
+*.zip
+!dawaai.db.zip
+scratch/
+figures/
+*.log
+cloudflared.exe
+mingit/
+mingit.zip
