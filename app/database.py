@@ -2,6 +2,7 @@
 Database connection and schema initialization for Dawaa'i AI.
 Uses SQLite with Write-Ahead Logging (WAL) mode for concurrency and durability.
 """
+import os
 import sqlite3
 import json
 import re
@@ -24,10 +25,70 @@ def normalize_arabic(text: str) -> str:
     text = text.replace('ـ', '')
     return text.lower().strip()
 
+def ensure_database_loaded(target_path: str = None) -> str:
+    """
+    Ensures that the active database file exists and is populated.
+    In serverless / ephemeral container environments (Vercel, AWS Lambda),
+    it unpacks the authoritative pre-indexed production database from
+    data/dawaai_base.db.gz into /tmp/dawaai.db.
+    """
+    target = target_path or settings.DATABASE_PATH
+    if os.path.exists(target) and os.path.getsize(target) > 1024:
+        return target
+
+    target_dir = os.path.dirname(target)
+    if target_dir and not os.path.exists(target_dir):
+        try:
+            os.makedirs(target_dir, exist_ok=True)
+        except Exception:
+            pass
+
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    gz_base = os.path.join(base_dir, "data", "dawaai_base.db.gz")
+    raw_base = os.path.join(base_dir, "data", "dawaai_base.db")
+
+    # 1. Preferred: High-capacity compressed production database (10.7 MB -> 80.9 MB with 23,903 items)
+    if os.path.exists(gz_base) and os.path.getsize(gz_base) > 1024:
+        try:
+            import gzip
+            import shutil
+            tmp_target = target + ".tmp"
+            with gzip.open(gz_base, "rb") as f_in:
+                with open(tmp_target, "wb") as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+            try:
+                os.replace(tmp_target, target)
+            except Exception:
+                import shutil
+                shutil.copy2(tmp_target, target)
+                try:
+                    os.remove(tmp_target)
+                except Exception:
+                    pass
+            return target
+        except Exception as e:
+            print(f"[db] Warning extracting {gz_base}: {e}")
+
+    # 2. Fallback: Uncompressed base database
+    if os.path.exists(raw_base) and os.path.getsize(raw_base) > 1024:
+        try:
+            import shutil
+            shutil.copy2(raw_base, target)
+            return target
+        except Exception as e:
+            print(f"[db] Warning copying {raw_base}: {e}")
+
+    return target
+
 def get_connection():
+    ensure_database_loaded()
+
     conn = sqlite3.connect(settings.DATABASE_PATH, timeout=30.0)
     conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL;")
+    if "/tmp" in str(settings.DATABASE_PATH) or os.getenv("VERCEL") == "1":
+        conn.execute("PRAGMA journal_mode=MEMORY;")
+    else:
+        conn.execute("PRAGMA journal_mode=WAL;")
     conn.execute("PRAGMA foreign_keys=ON;")
     # Register Arabic normalization function for robust search
     conn.create_function("NORM_AR", 1, normalize_arabic)
@@ -102,7 +163,7 @@ def init_db():
             source_authority TEXT NOT NULL,
             source_url TEXT NOT NULL,
             is_verified INTEGER DEFAULT 1,
-            verified_at TEXT NOT NULL,
+            verified_at TEXT,
             created_at TEXT NOT NULL
         );
         """)
@@ -123,6 +184,26 @@ def init_db():
             cursor.execute("ALTER TABLE medicines ADD COLUMN price REAL;")
         if "manufacturer" not in columns:
             cursor.execute("ALTER TABLE medicines ADD COLUMN manufacturer TEXT;")
+        if "is_hidden" not in columns:
+            cursor.execute("ALTER TABLE medicines ADD COLUMN is_hidden INTEGER DEFAULT 0;")
+        if "hidden_reason" not in columns:
+            cursor.execute("ALTER TABLE medicines ADD COLUMN hidden_reason TEXT;")
+        if "classification" not in columns:
+            cursor.execute("ALTER TABLE medicines ADD COLUMN classification TEXT DEFAULT 'registered_drug';")
+        if "clean_strength" not in columns:
+            cursor.execute("ALTER TABLE medicines ADD COLUMN clean_strength TEXT;")
+        if "clean_dosage_form" not in columns:
+            cursor.execute("ALTER TABLE medicines ADD COLUMN clean_dosage_form TEXT;")
+        if "clean_route" not in columns:
+            cursor.execute("ALTER TABLE medicines ADD COLUMN clean_route TEXT;")
+        if "atc_code" not in columns:
+            cursor.execute("ALTER TABLE medicines ADD COLUMN atc_code TEXT;")
+        if "pharmacological_class_en" not in columns:
+            cursor.execute("ALTER TABLE medicines ADD COLUMN pharmacological_class_en TEXT;")
+        if "pharmacological_class_ar" not in columns:
+            cursor.execute("ALTER TABLE medicines ADD COLUMN pharmacological_class_ar TEXT;")
+        if "monograph_coverage" not in columns:
+            cursor.execute("ALTER TABLE medicines ADD COLUMN monograph_coverage TEXT DEFAULT 'none';")
 
         # CLEAN-UP: records auto-saved by the old scanner (id 'med-ai-*') were generated by an LLM and
         # were wrongly flagged as verified. Check before running full scan to keep startup instant.

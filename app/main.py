@@ -2,6 +2,7 @@
 Main FastAPI application entry point for Dawaa'i AI.
 """
 import os
+import urllib.parse
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
@@ -9,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
 from app.config import settings
-from app.database import init_db
+from app.database import init_db, ensure_database_loaded
 from app.medicines_db import seed_initial_medicines
 from app.routers import auth, medicines, scan, leaflets, assistant, reviews, statistics
 from app.ai_provider import ai_provider
@@ -20,19 +21,16 @@ from datetime import datetime, timezone
 async def lifespan(app: FastAPI):
     print(f"[startup] Dawaa'i AI starting in '{settings.ENVIRONMENT}' mode...")
     
-    # Auto-extract database if dawaai.db does not exist but dawaai.db.zip exists
     db_path = settings.DATABASE_PATH
-    if not os.path.exists(db_path) and os.path.exists(f"{db_path}.zip"):
-        print(f"[startup] Unzipping packaged database {db_path}.zip ...")
-        import zipfile
-        with zipfile.ZipFile(f"{db_path}.zip", "r") as z:
-            z.extractall(".")
-        print(f"[startup] Extracted {db_path} successfully ({os.path.getsize(db_path)/(1024*1024):.2f} MB).")
+    try:
+        ensure_database_loaded(db_path)
+        print(f"[startup] Active database: {settings.DATABASE_PATH} ({os.path.getsize(db_path)/(1024*1024):.2f} MB)")
+        init_db()
+        seed_initial_medicines()
+        print("[startup] Application startup complete - Dawaa'i AI ready.")
+    except Exception as exc:
+        print(f"[startup] Non-fatal startup initialization warning: {exc}")
         
-    print(f"[startup] Active database: {settings.DATABASE_PATH}")
-    init_db()
-    seed_initial_medicines()
-    print("[startup] Application startup complete - Dawaa'i AI ready.")
     yield
 
 app = FastAPI(
@@ -51,19 +49,34 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Register API Routers
-app.include_router(auth.router, prefix=settings.API_PREFIX)
-app.include_router(medicines.router, prefix=settings.API_PREFIX)
-app.include_router(scan.router, prefix=settings.API_PREFIX)
-app.include_router(leaflets.router, prefix=settings.API_PREFIX)
-app.include_router(assistant.router, prefix=settings.API_PREFIX)
-app.include_router(reviews.router, prefix=settings.API_PREFIX)
-app.include_router(statistics.router, prefix=settings.API_PREFIX)
+@app.middleware("http")
+async def vercel_route_rewriter(request: Request, call_next):
+    if "__route__" in request.query_params:
+        target_path = request.query_params["__route__"]
+        request.scope["path"] = target_path
+        params = dict(request.query_params)
+        params.pop("__route__", None)
+        clean_qs = urllib.parse.urlencode(params)
+        request.scope["query_string"] = clean_qs.encode("latin1")
+    return await call_next(request)
+
+# Register API Routers with standard prefix (/api) AND root prefix (for Vercel serverless routing)
+for prefix in [settings.API_PREFIX, ""]:
+    app.include_router(auth.router, prefix=prefix)
+    app.include_router(medicines.router, prefix=prefix)
+    app.include_router(scan.router, prefix=prefix)
+    app.include_router(leaflets.router, prefix=prefix)
+    app.include_router(assistant.router, prefix=prefix)
+    app.include_router(reviews.router, prefix=prefix)
+    app.include_router(statistics.router, prefix=prefix)
 
 # Static files directory
 STATIC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "static"))
-if not os.path.exists(STATIC_DIR):
-    os.makedirs(STATIC_DIR, exist_ok=True)
+try:
+    if not os.path.exists(STATIC_DIR):
+        os.makedirs(STATIC_DIR, exist_ok=True)
+except Exception:
+    pass
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
@@ -88,6 +101,7 @@ async def serve_spa_routes():
         return FileResponse(index_path)
     return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
+@app.get("/health")
 @app.get("/api/health")
 async def health_check():
     """

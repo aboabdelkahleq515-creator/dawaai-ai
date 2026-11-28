@@ -9,52 +9,71 @@ import base64
 import io
 import re
 from typing import Optional, Dict, Any, List
-import numpy as np
-import joblib
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
-import torch
-import torch.nn as nn
+try:
+    import joblib
+except ImportError:
+    joblib = None
+
+try:
+    import torch
+    import torch.nn as nn
+    _HAS_TORCH = True
+except ImportError:
+    torch = None
+    nn = None
+    _HAS_TORCH = False
+
 from PIL import Image
 
 PACKAGING_CLASSES = [
     "Tablets", "Capsules", "Oral Liquid / Syrup", "Injection", "Cream / Ointment", "Drops"
 ]
 
-class DrugPackagingCNN(nn.Module):
-    """
-    Convolutional Neural Network for identifying pharmaceutical dosage & packaging forms.
-    Input: (B, 3, 64, 64) Normalized Image Tensor
-    """
-    def __init__(self, num_classes=len(PACKAGING_CLASSES)):
-        super(DrugPackagingCNN, self).__init__()
-        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
-        self.bn1 = nn.BatchNorm2d(32)
-        self.relu1 = nn.ReLU()
-        self.pool1 = nn.MaxPool2d(2, 2)
-        
-        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
-        self.bn2 = nn.BatchNorm2d(64)
-        self.relu2 = nn.ReLU()
-        self.pool2 = nn.MaxPool2d(2, 2)
-        
-        self.conv3 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
-        self.bn3 = nn.BatchNorm2d(128)
-        self.relu3 = nn.ReLU()
-        self.pool3 = nn.AdaptiveAvgPool2d((4, 4))
-        
-        self.dropout = nn.Dropout(0.35)
-        self.fc1 = nn.Linear(128 * 4 * 4, 128)
-        self.fc_relu = nn.ReLU()
-        self.fc2 = nn.Linear(128, num_classes)
+if _HAS_TORCH and nn is not None:
+    class DrugPackagingCNN(nn.Module):
+        """
+        Convolutional Neural Network for identifying pharmaceutical dosage & packaging forms.
+        Input: (B, 3, 64, 64) Normalized Image Tensor
+        """
+        def __init__(self, num_classes=len(PACKAGING_CLASSES)):
+            super(DrugPackagingCNN, self).__init__()
+            self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
+            self.bn1 = nn.BatchNorm2d(32)
+            self.relu1 = nn.ReLU()
+            self.pool1 = nn.MaxPool2d(2, 2)
+            
+            self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
+            self.bn2 = nn.BatchNorm2d(64)
+            self.relu2 = nn.ReLU()
+            self.pool2 = nn.MaxPool2d(2, 2)
+            
+            self.conv3 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
+            self.bn3 = nn.BatchNorm2d(128)
+            self.relu3 = nn.ReLU()
+            self.pool3 = nn.AdaptiveAvgPool2d((4, 4))
+            
+            self.dropout = nn.Dropout(0.35)
+            self.fc1 = nn.Linear(128 * 4 * 4, 128)
+            self.fc_relu = nn.ReLU()
+            self.fc2 = nn.Linear(128, num_classes)
 
-    def forward(self, x):
-        x = self.pool1(self.relu1(self.bn1(self.conv1(x))))
-        x = self.pool2(self.relu2(self.bn2(self.conv2(x))))
-        x = self.pool3(self.relu3(self.bn3(self.conv3(x))))
-        x = x.view(x.size(0), -1)
-        x = self.dropout(self.fc_relu(self.fc1(x)))
-        x = self.fc2(x)
-        return x
+        def forward(self, x):
+            x = self.pool1(self.relu1(self.bn1(self.conv1(x))))
+            x = self.pool2(self.relu2(self.bn2(self.conv2(x))))
+            x = self.pool3(self.relu3(self.bn3(self.conv3(x))))
+            x = x.view(x.size(0), -1)
+            x = self.dropout(self.fc_relu(self.fc1(x)))
+            x = self.fc2(x)
+            return x
+else:
+    class DrugPackagingCNN:
+        def __init__(self, *args, **kwargs):
+            pass
 
 
 class MLEngine:

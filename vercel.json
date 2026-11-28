@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/static/(.*)",
+      "destination": "/static/$1"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py?__route__=/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/static/index.html"
+    }
+  ]
+}

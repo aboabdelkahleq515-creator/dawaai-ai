@@ -11,9 +11,15 @@ load_dotenv()
 def resolve_database_path() -> str:
     """
     Intelligently resolves the active database path.
-    Prioritizes explicit DATABASE_PATH from env, then dawaai.db, then medicines.db,
-    or backups if present. Never deletes or corrupts any existing database files.
+    On Vercel and serverless environments where /var/task is read-only,
+    writable database storage is routed to /tmp/dawaai.db.
     """
+    # 1. Serverless environment detection (Vercel / AWS Lambda)
+    if os.getenv("VERCEL") == "1" or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+        import tempfile
+        tmp_dir = "/tmp" if os.path.exists("/tmp") else tempfile.gettempdir()
+        return os.path.join(tmp_dir, "dawaai.db")
+
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     env_path = os.getenv("DATABASE_PATH")
     
@@ -37,6 +43,15 @@ def resolve_database_path() -> str:
         b_path = os.path.join(base_dir, b_name)
         if os.path.exists(b_path) and os.path.getsize(b_path) > 1024:
             return b_path
+
+    # Check if local directory is writable; if not (e.g. read-only container), fall back to /tmp
+    try:
+        test_probe = os.path.join(base_dir, ".probe_write")
+        with open(test_probe, "w") as f:
+            f.write("1")
+        os.remove(test_probe)
+    except (OSError, PermissionError):
+        return "/tmp/dawaai.db"
 
     return dawaai_path
 
